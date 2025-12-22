@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar } from "lucide-react"
+import { Calendar, PersonStanding } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
@@ -21,8 +21,10 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
 
   const pathname = usePathname()
 
+  const isAuthenticated = true
+
   const getDashboardNavigation = (): NavigationItem[] => {
-    if (!user || !showDashboardNav) return []
+    // if (!user || !showDashboardNav) return []
 
     if (user?.type === "student") {
       return [
@@ -59,8 +61,34 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
         {/* Left side -> logo  + navigation */}
         <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-2xl text-gray-800">Shikshak</span>
+            <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+              <PersonStanding className="w-5 h-5 text-white" />
+            </div>
+
+            <div className="text-2xl font-bold bg-linear-to-br from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              Shikshak
+            </div>
           </Link>
+
+          {/* Dashboard navigation */}
+          {isAuthenticated && !showDashboardNav && (
+            <nav className="hidden md:flex items-center space-x-6">
+              {getDashboardNavigation().map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-1 transition-colors ${
+                    item.active
+                      ? "text-blue-600 font-semibold"
+                      : "text-gray-600 hover:text-blue-600"
+                  }`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{item.lable}</span>
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
       </div>
     </header>
