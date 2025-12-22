@@ -1,6 +1,9 @@
 import React from "react"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import { subjectCategories } from "@/lib/constant"
+
+const handleCategoryClick = (categoryTitle: string) => {}
 
 const LandingHero = () => {
   return (
@@ -34,6 +37,37 @@ const LandingHero = () => {
             </Button>
           </Link>
         </div>
+
+        {/* Subject categories */}
+        <section className="py-6">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center items-center overflow-x-auto gap-6 pb-2 scrollbar-hide mx-auto">
+              {subjectCategories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.title)}
+                  className="flex flex-col items-center min-w-25 group transition-transform"
+                >
+                  <div
+                    className={`w-12 h-12 ${category.color} rounded-2xl flex items-center justify-center mb-2 group-hover:shadow-xl transition-all duration-200`}
+                  >
+                    <svg
+                      className="w-6 h-6 text-white "
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d={category.icon} />
+                    </svg>
+                  </div>
+
+                  <span className="text-xs font-medium text-blue-900 text-center leading-tight">
+                    {category.title}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   )
