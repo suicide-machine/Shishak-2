@@ -21,10 +21,10 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
 
   const pathname = usePathname()
 
-  const isAuthenticated = true
+  const isAuthenticated = false
 
   const getDashboardNavigation = (): NavigationItem[] => {
-    // if (!user || !showDashboardNav) return []
+    if (!user || !showDashboardNav) return []
 
     if (user?.type === "student") {
       return [
@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
           </Link>
 
           {/* Dashboard navigation */}
-          {isAuthenticated && !showDashboardNav && (
+          {isAuthenticated && showDashboardNav && (
             <nav className="hidden md:flex items-center space-x-6">
               {getDashboardNavigation().map((item) => (
                 <Link
