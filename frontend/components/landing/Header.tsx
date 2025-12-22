@@ -1,11 +1,20 @@
 "use client"
 
-import { Bell, Calendar, PersonStanding } from "lucide-react"
+import { Bell, Calendar, PersonStanding, Settings, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 interface HeaderProps {
   showDashboardNav?: boolean
@@ -19,7 +28,12 @@ interface NavigationItem {
 }
 
 const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
-  const user = { type: "student" }
+  const user = {
+    type: "student",
+    name: "Arya",
+    profileImage: "",
+    email: "arya@gmail.com",
+  }
 
   const pathname = usePathname()
 
@@ -101,6 +115,87 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
                 4
               </Badge>
             </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2 px-2"
+                >
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage
+                      src={user?.profileImage}
+                      alt={user?.name}
+                    ></AvatarImage>
+
+                    <AvatarFallback className="bg-blue-100 text-blue-600 text-sm font-semibold">
+                      {user?.name?.charAt(0)?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="hidden md:block text-left">
+                    <p className="text-sm font-medium text-gray-900">
+                      {user?.name}
+                    </p>
+
+                    <p className="text-xs text-gray-500 capitalize">
+                      {user?.type}
+                    </p>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage
+                        src={user?.profileImage}
+                        alt={user?.name}
+                      ></AvatarImage>
+
+                      <AvatarFallback className="bg-blue-100 text-blue-600 ">
+                        {user?.name?.charAt(0)?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div className="flex-1 min-w-0">
+                      <p className=" font-medium truncate">{user?.name}</p>
+
+                      <p className="text-sm text-gray-500 truncate max-w-35">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/${user?.type}/profile`}
+                    className="flex items-center"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/${user?.type}/settings`}
+                    className="flex items-center"
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
           <div className="flex items-center space-x-3">
