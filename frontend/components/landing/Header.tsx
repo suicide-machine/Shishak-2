@@ -1,9 +1,11 @@
 "use client"
 
-import { Calendar, PersonStanding } from "lucide-react"
+import { Bell, Calendar, PersonStanding } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
+import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
 
 interface HeaderProps {
   showDashboardNav?: boolean
@@ -90,6 +92,53 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
             </nav>
           )}
         </div>
+
+        {isAuthenticated && showDashboardNav ? (
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" className="relative">
+              <Bell className="w-5 h-5" />
+              <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-red-500 hover:bg-red-600">
+                4
+              </Badge>
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-3">
+            {!isAuthenticated ? (
+              <>
+                <Link href="/login/student">
+                  <Button
+                    variant="ghost"
+                    className="text-blue-900 font-medium hover:text-blue-700"
+                  >
+                    Log in
+                  </Button>
+                </Link>
+
+                <Link href="/signup/student" className="hidden md:block">
+                  <Button className="bg-linear-to-r from-blue-600 to-blue-700 font-medium hover:from-blue-700 hover:to-blue-800 rounded-full px-6">
+                    Book a Tutor
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <span className="hidden md:block text-sm text-gray-700 font-medium whitespace-nowrap">
+                  Welcome,&nbsp;{user?.name}
+                </span>
+
+                <Link href={`/${user?.type}/dashboard`}>
+                  <Button
+                    variant="ghost"
+                    className="text-blue-900 font-medium hover:text-blue-700"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   )
