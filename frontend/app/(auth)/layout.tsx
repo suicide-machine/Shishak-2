@@ -1,8 +1,28 @@
 "use client"
 
-import React from "react"
+import { redirect } from "next/navigation"
+import React, { useEffect } from "react"
 
 const layout = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = true
+
+  const user = {
+    type: "teacher",
+    name: "Arya",
+    profileImage: "",
+    email: "arya@gmail.com",
+  }
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.type === "teacher") {
+        redirect("/teacher/dashboard")
+      } else {
+        redirect("/student/dashboard")
+      }
+    }
+  }, [isAuthenticated, user])
+
   return (
     <div className="min-h-screen flex">
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white">
@@ -29,6 +49,17 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                 />
               </svg>
             </div>
+
+            <h2 className="text-4xl font-bold mb-4">Welcome to Shikshak</h2>
+
+            <p className="text-xl opacity-90 mb-4">
+              Your education, our priority
+            </p>
+
+            <p className="text-lg opacity-75">
+              Connecting learners with expert tutors for personalized academic
+              success.
+            </p>
           </div>
         </div>
       </div>
