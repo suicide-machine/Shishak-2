@@ -153,33 +153,33 @@ export const testimonials = [
   },
 ]
 
-// export const faqs = [
-//   {
-//     question: "How much does a tutoring session cost?",
-//     answer:
-//       "Prices vary based on tutor experience and subject difficulty, ranging from $20-$80 per hour. We offer subscription plans for regular sessions and bundle discounts. Some tutors also offer free trial sessions.",
-//   },
-//   {
-//     question: "Can I find tutors for specialized subjects?",
-//     answer:
-//       "Yes! We have tutors for everything from elementary math to graduate-level machine learning, including test prep (SAT, ACT, GRE, GMAT), programming languages, and niche academic subjects.",
-//   },
-//   {
-//     question: "How do I choose the right tutor?",
-//     answer:
-//       "You can filter by subject, education level, price, ratings, and availability. Each tutor has a detailed profile with credentials, teaching style, reviews, and sample videos. We also offer a matching quiz to find your perfect tutor.",
-//   },
-//   {
-//     question: "What if I'm not satisfied with my tutor?",
-//     answer:
-//       "We offer a satisfaction guarantee. If you're not happy with your first session, you can request a different tutor or receive a full refund. We also provide progress tracking tools to ensure you're meeting your learning goals.",
-//   },
-//   {
-//     question: "Can I schedule sessions at odd hours?",
-//     answer:
-//       "Absolutely! Our platform includes tutors from different time zones, so you can find help 24/7. Many tutors offer weekend and late-night sessions for last-minute exam prep.",
-//   },
-// ]
+export const faqs = [
+  {
+    question: "How much does a tutoring session cost?",
+    answer:
+      "Prices vary based on tutor experience and subject difficulty, ranging from $20-$80 per hour. We offer subscription plans for regular sessions and bundle discounts. Some tutors also offer free trial sessions.",
+  },
+  {
+    question: "Can I find tutors for specialized subjects?",
+    answer:
+      "Yes! We have tutors for everything from elementary math to graduate-level machine learning, including test prep (SAT, ACT, GRE, GMAT), programming languages, and niche academic subjects.",
+  },
+  {
+    question: "How do I choose the right tutor?",
+    answer:
+      "You can filter by subject, education level, price, ratings, and availability. Each tutor has a detailed profile with credentials, teaching style, reviews, and sample videos. We also offer a matching quiz to find your perfect tutor.",
+  },
+  {
+    question: "What if I'm not satisfied with my tutor?",
+    answer:
+      "We offer a satisfaction guarantee. If you're not happy with your first session, you can request a different tutor or receive a full refund. We also provide progress tracking tools to ensure you're meeting your learning goals.",
+  },
+  {
+    question: "Can I schedule sessions at odd hours?",
+    answer:
+      "Absolutely! Our platform includes tutors from different time zones, so you can find help 24/7. Many tutors offer weekend and late-night sessions for last-minute exam prep.",
+  },
+]
 
 export const trustLogos = [
   "Forbes Education",
