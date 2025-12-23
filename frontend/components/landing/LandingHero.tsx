@@ -2,10 +2,28 @@ import React from "react"
 import { Button } from "../ui/button"
 import Link from "next/link"
 import { subjectCategories } from "@/lib/constant"
-
-const handleCategoryClick = (categoryTitle: string) => {}
+import { useRouter } from "next/navigation"
 
 const LandingHero = () => {
+  const isAuthenticated = false
+  const router = useRouter()
+
+  const handleBookConsultation = () => {
+    if (isAuthenticated) {
+      router.push("/teacher-list")
+    } else {
+      router.push("/signup/student")
+    }
+  }
+
+  const handleCategoryClick = (categoryTitle: string) => {
+    if (isAuthenticated) {
+      router.push(`/teacher-list?category=${categoryTitle}`)
+    } else {
+      router.push("/signup/student")
+    }
+  }
+
   return (
     <section className="py-20 px-4 bg-linear-to-b from-blue-50 to-white">
       <div className="container mx-auto text-center">
@@ -21,6 +39,7 @@ const LandingHero = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Button
+            onClick={handleBookConsultation}
             size="lg"
             className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-full px-8 py-3 text-lg"
           >
