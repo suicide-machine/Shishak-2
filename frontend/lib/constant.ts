@@ -194,24 +194,24 @@ export const trustLogos = [
   "WSJ Learning",
 ]
 
-// export const contactInfo = [
-//   {
-//     icon: Phone,
-//     text: "1-888-TUTOR-NOW (1-888-888-7669)",
-//   },
-//   {
-//     icon: Mail,
-//     text: "support@tutorconnect.com",
-//   },
-//   {
-//     icon: MapPin,
-//     text: "Online tutoring available worldwide",
-//   },
-//   {
-//     icon: Clock,
-//     text: "24/7 Support Available",
-//   },
-// ]
+export const contactInfo = [
+  {
+    icon: Phone,
+    text: "1-888-TUTOR-NOW (1-888-888-7669)",
+  },
+  {
+    icon: Mail,
+    text: "support@tutorconnect.com",
+  },
+  {
+    icon: MapPin,
+    text: "Online tutoring available worldwide",
+  },
+  {
+    icon: Clock,
+    text: "24/7 Support Available",
+  },
+]
 
 // export const footerSections = [
 //   {
