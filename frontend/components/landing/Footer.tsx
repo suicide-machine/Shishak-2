@@ -3,6 +3,7 @@
 import { contactInfo, footerSections } from "@/lib/constant"
 import { PersonStanding } from "lucide-react"
 import React from "react"
+import { Button } from "../ui/button"
 
 const Footer = () => {
   return (
@@ -63,6 +64,31 @@ const Footer = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Newslesster section */}
+        <div className="py-8 border-t border-blue-700/50">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h4 className="font-semibold text-white mb-2">Stay Updated</h4>
+              <p className="text-blue-200 text-sm">
+                Get study tips, learning resources, and tutor updates delivered
+                to your inbox.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="px-4 py-2 rpounded-lg bg-blue-800/50 border border-blue-600 text-white placeholder:blue-300  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent min-w-70"
+              />
+
+              <Button className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg whitespace-nowrap">
+                Subscribe
+              </Button>
             </div>
           </div>
         </div>
