@@ -1,0 +1,39 @@
+"use client"
+
+import React from "react"
+
+const layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="min-h-screen flex">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white">
+        {children}
+      </div>
+
+      <div className="hidden lg:block w-1/2 relative overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-br from-blue-900/20 to-transparent z-10"></div>
+
+        <div className="w-full h-full bg-linear-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center">
+          <div className="text-center text-white p-8 max-w-md">
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop:blur-sm">
+              <svg
+                className="w-12 h-12 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default layout
