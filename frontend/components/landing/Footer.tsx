@@ -1,6 +1,6 @@
 "use client"
 
-import { contactInfo } from "@/lib/constant"
+import { contactInfo, footerSections } from "@/lib/constant"
 import { PersonStanding } from "lucide-react"
 import React from "react"
 
@@ -34,6 +34,32 @@ const Footer = () => {
                   >
                     <item.icon className="w-4 h-4 text-white" />
                     <span>{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Links section */}
+            <div className="lg:col-span-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {footerSections.map((section, index) => (
+                  <div key={index}>
+                    <h3 className="font-semibold text-white mb-4 text-lg">
+                      {section.title}
+                    </h3>
+
+                    <ul className="space-y-3">
+                      {section.links.map((link, linkIndex) => (
+                        <li key={linkIndex}>
+                          <a
+                            href={link.href}
+                            className="text-blue-200 hover:text-white transition-colors duration-200 text-sm hover:underline"
+                          >
+                            {link.text}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>

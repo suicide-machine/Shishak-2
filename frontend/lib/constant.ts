@@ -213,46 +213,46 @@ export const contactInfo = [
   },
 ]
 
-// export const footerSections = [
-//   {
-//     title: "Company",
-//     links: [
-//       { text: "About Us", href: "/about" },
-//       { text: "How It Works", href: "/how-it-works" },
-//       { text: "Careers", href: "/careers" },
-//       { text: "Blog", href: "/blog" },
-//       { text: "Contact Us", href: "/contact" },
-//     ],
-//   },
-//   {
-//     title: "For Tutors",
-//     links: [
-//       { text: "Become a Tutor", href: "/signup/tutor" },
-//       { text: "Tutor Resources", href: "/tutor-resources" },
-//       { text: "Tutor Dashboard", href: "/tutor/dashboard" },
-//       { text: "Pricing for Tutors", href: "/tutor-pricing" },
-//     ],
-//   },
-//   {
-//     title: "For Students",
-//     links: [
-//       { text: "Find Tutors", href: "/tutors" },
-//       { text: "Browse Subjects", href: "/subjects" },
-//       { text: "Student Dashboard", href: "/student/dashboard" },
-//       { text: "Learning Resources", href: "/resources" },
-//       { text: "Book Session", href: "/signup/student" },
-//     ],
-//   },
-//   {
-//     title: "Legal",
-//     links: [
-//       { text: "Privacy Policy", href: "/privacy" },
-//       { text: "Terms of Service", href: "/terms" },
-//       { text: "Cookie Policy", href: "/cookies" },
-//       { text: "Academic Integrity", href: "/integrity" },
-//     ],
-//   },
-// ]
+export const footerSections = [
+  {
+    title: "Company",
+    links: [
+      { text: "About Us", href: "/about" },
+      { text: "How It Works", href: "/how-it-works" },
+      { text: "Careers", href: "/careers" },
+      { text: "Blog", href: "/blog" },
+      { text: "Contact Us", href: "/contact" },
+    ],
+  },
+  {
+    title: "For Tutors",
+    links: [
+      { text: "Become a Tutor", href: "/signup/tutor" },
+      { text: "Tutor Resources", href: "/tutor-resources" },
+      { text: "Tutor Dashboard", href: "/tutor/dashboard" },
+      { text: "Pricing for Tutors", href: "/tutor-pricing" },
+    ],
+  },
+  {
+    title: "For Students",
+    links: [
+      { text: "Find Tutors", href: "/tutors" },
+      { text: "Browse Subjects", href: "/subjects" },
+      { text: "Student Dashboard", href: "/student/dashboard" },
+      { text: "Learning Resources", href: "/resources" },
+      { text: "Book Session", href: "/signup/student" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { text: "Privacy Policy", href: "/privacy" },
+      { text: "Terms of Service", href: "/terms" },
+      { text: "Cookie Policy", href: "/cookies" },
+      { text: "Academic Integrity", href: "/integrity" },
+    ],
+  },
+]
 
 // export const socials = [
 //   { name: "twitter", icon: Twitter, url: "https://twitter.com/tutorconnect" },
