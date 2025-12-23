@@ -122,36 +122,36 @@ export const subjectCategories = [
 //   "Art History",
 // ]
 
-// export const testimonials = [
-//   {
-//     rating: 5,
-//     text: "My tutor was incredibly patient and broke down complex calculus problems into simple steps. I went from struggling to getting an A on my final exam!",
-//     author: "Alex T.",
-//     location: "High School Student",
-//     bgColor: "bg-chart-1/10",
-//   },
-//   {
-//     rating: 5,
-//     text: "The programming tutor helped me understand concepts I'd been stuck on for weeks. Real-time coding sessions made learning so much more effective.",
-//     author: "Sarah K.",
-//     location: "Computer Science Major",
-//     bgColor: "bg-chart-2/10",
-//   },
-//   {
-//     rating: 5,
-//     text: "My English tutor not only improved my essay writing skills but also boosted my confidence. I can now express my ideas clearly and concisely.",
-//     author: "Michael R.",
-//     location: "College Freshman",
-//     bgColor: "bg-chart-4/10",
-//   },
-//   {
-//     rating: 5,
-//     text: "Finding a specialized physics tutor was a game-changer. Flexible scheduling allowed me to get help right before exams, and the results showed in my grades.",
-//     author: "Jennifer L.",
-//     location: "Engineering Student",
-//     bgColor: "bg-chart-5/10",
-//   },
-// ]
+export const testimonials = [
+  {
+    rating: 5,
+    text: "My tutor was incredibly patient and broke down complex calculus problems into simple steps. I went from struggling to getting an A on my final exam!",
+    author: "Alex T.",
+    location: "High School Student",
+    bgColor: "bg-chart-1/10",
+  },
+  {
+    rating: 5,
+    text: "The programming tutor helped me understand concepts I'd been stuck on for weeks. Real-time coding sessions made learning so much more effective.",
+    author: "Sarah K.",
+    location: "Computer Science Major",
+    bgColor: "bg-chart-2/10",
+  },
+  {
+    rating: 5,
+    text: "My English tutor not only improved my essay writing skills but also boosted my confidence. I can now express my ideas clearly and concisely.",
+    author: "Michael R.",
+    location: "College Freshman",
+    bgColor: "bg-chart-4/10",
+  },
+  {
+    rating: 5,
+    text: "Finding a specialized physics tutor was a game-changer. Flexible scheduling allowed me to get help right before exams, and the results showed in my grades.",
+    author: "Jennifer L.",
+    location: "Engineering Student",
+    bgColor: "bg-chart-5/10",
+  },
+]
 
 // export const faqs = [
 //   {
