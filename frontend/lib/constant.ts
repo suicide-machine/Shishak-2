@@ -254,24 +254,24 @@ export const footerSections = [
   },
 ]
 
-// export const socials = [
-//   { name: "twitter", icon: Twitter, url: "https://twitter.com/tutorconnect" },
-//   {
-//     name: "facebook",
-//     icon: Facebook,
-//     url: "https://facebook.com/tutorconnect",
-//   },
-//   {
-//     name: "linkedin",
-//     icon: Linkedin,
-//     url: "https://linkedin.com/company/tutorconnect",
-//   },
-//   {
-//     name: "instagram",
-//     icon: Instagram,
-//     url: "https://instagram.com/tutorconnect",
-//   },
-// ]
+export const socials = [
+  { name: "twitter", icon: Twitter, url: "https://twitter.com/tutorconnect" },
+  {
+    name: "facebook",
+    icon: Facebook,
+    url: "https://facebook.com/tutorconnect",
+  },
+  {
+    name: "linkedin",
+    icon: Linkedin,
+    url: "https://linkedin.com/company/tutorconnect",
+  },
+  {
+    name: "instagram",
+    icon: Instagram,
+    url: "https://instagram.com/tutorconnect",
+  },
+]
 
 // export const cities = [
 //   "New York",
