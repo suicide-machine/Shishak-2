@@ -181,18 +181,18 @@ export const testimonials = [
 //   },
 // ]
 
-// export const trustLogos = [
-//   "Forbes Education",
-//   "EdTech Magazine",
-//   "The Chronicle",
-//   "Education Week",
-//   "TechCrunch",
-//   "Wired",
-//   "Business Insider EDU",
-//   "Inc. Education",
-//   "NYT Education",
-//   "WSJ Learning",
-// ]
+export const trustLogos = [
+  "Forbes Education",
+  "EdTech Magazine",
+  "The Chronicle",
+  "Education Week",
+  "TechCrunch",
+  "Wired",
+  "Business Insider EDU",
+  "Inc. Education",
+  "NYT Education",
+  "WSJ Learning",
+]
 
 // export const contactInfo = [
 //   {
