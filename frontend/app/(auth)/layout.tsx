@@ -4,10 +4,10 @@ import { redirect } from "next/navigation"
 import React, { useEffect } from "react"
 
 const layout = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = true
+  const isAuthenticated = false
 
   const user = {
-    type: "teacher",
+    type: "student",
     name: "Arya",
     profileImage: "",
     email: "arya@gmail.com",
