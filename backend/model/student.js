@@ -43,31 +43,38 @@ const studentSchema = new mongoose.Schema(
 
     gender: { type: String, enum: ["male", "female", "other"] },
 
-    currentInstitution: { type: String },
-
-    class: { type: String },
-
-    board: {
+    educationLevel: {
       type: String,
-      enum: ["CBSE", "ICSE", "State Board", "Other"],
+      enum: ["primary", "secondary", "high-school", "college", "university"],
     },
+
+    // currentInstitution: { type: String },
+
+    // class: { type: String },
+
+    // board: {
+    //   type: String,
+    //   enum: ["CBSE", "ICSE", "State Board", "Other"],
+    // },
 
     // Academic Information
-    preferredTutorGender: {
-      type: String,
-      enum: ["male", "female", "any", "no-preference"],
-      default: "no-preference",
-    },
+    // preferredTutorGender: {
+    //   type: String,
+    //   enum: ["male", "female", "any", "no-preference"],
+    //   default: "no-preference",
+    // },
 
-    preferredTeachingMedium: {
-      type: [String],
-      enum: ["offline", "online"],
-      default: ["offline"],
-    },
+    // preferredTeachingMedium: {
+    //   type: [String],
+    //   enum: ["offline", "online"],
+    //   default: ["offline"],
+    // },
 
     guardian: guardianSchema,
 
     academicBackground: academicHistorySchema,
+
+    isVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
 )
