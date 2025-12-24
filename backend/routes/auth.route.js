@@ -5,6 +5,7 @@ const validate = require("../middleware/validate")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const Teacher = require("../model/teacher")
+const Student = require("../model/student")
 
 const router = express.Router()
 
@@ -60,6 +61,63 @@ router.post(
 
       res.created(
         { token, user: { id: teacher._id, type: "teacher" } },
+        "Login successful"
+      )
+    } catch (error) {
+      res.serverError("Login failed", [error.message])
+    }
+  }
+)
+
+router.post(
+  "/student/register",
+  [
+    body("name").notEmpty(),
+    body("email").isEmail(),
+    body("password").isLength({ min: 6 }),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const exists = await Student.findOne({ email: req.body.email })
+
+      if (exists) return res.badRequest("Student alredy exists")
+
+      const hashed = await bcrypt.hash(req.body.password, 12)
+
+      const student = await Student.create({ ...req.body, password: hashed })
+
+      const token = signToken(student._id, "student")
+
+      res.created(
+        { token, user: { id: student._id, type: "student" } },
+        "Student registered"
+      )
+    } catch (error) {
+      res.serverError("Registration failed", [error.message])
+    }
+  }
+)
+
+router.post(
+  "/student/login",
+  [body("email").isEmail(), body("password").isLength({ min: 6 })],
+  validate,
+  async (req, res) => {
+    try {
+      const student = await Student.findOne({ email: req.body.email })
+
+      if (!student || !student.password)
+        return res.unauthorized("Invalid credentials")
+
+      const match = await bcrypt.compare(req.body.password, student.password)
+
+      if (!match) return res.unauthorized("Invalid credentials")
+
+      const token = signToken(student._id, "student")
+
+      res.created(
+        { token, user: { id: student._id, type: "student" } },
         "Login successful"
       )
     } catch (error) {
