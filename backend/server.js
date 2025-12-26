@@ -41,6 +41,8 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err))
 
+app.use("/api/auth", require("./routes/auth"))
+
 app.get("/health", (req, res) =>
   res.ok({ time: new Date().toISOString() }, "OK")
 )

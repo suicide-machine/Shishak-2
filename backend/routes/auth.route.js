@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const Teacher = require("../model/teacher")
 const Student = require("../model/student")
+const passport = require("passport")
 
 const router = express.Router()
 
@@ -127,3 +128,55 @@ router.post(
 )
 
 //Google Outh Start form here
+
+router.get("/google", (req, res, next) => {
+  const userType = req.query.type || "student"
+
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    state: userType,
+    prompt: "select_account",
+  })(req, res, next)
+})
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/auth/failure",
+  }),
+  async (req, res) => {
+    try {
+      const { user, type } = req.user
+
+      const token = signToken(user._id, type)
+
+      //Redirect to frontend with token
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000"
+
+      const redirectUrl = `${frontendUrl}/auth/success?token=${token}&type=${type}&user=${encodeURIComponent(
+        JSON.stringify({
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          profileImage: user.profileImage,
+        })
+      )}`
+
+      res.redirect(redirectUrl)
+    } catch (error) {
+      res.redirect(
+        `${process.env.FRONTEND_URL}/auth/error?message=${encodeURIComponent(
+          e.message
+        )}`
+      )
+    }
+  }
+)
+
+//Auth failure
+router.get("/failure", (req, res) =>
+  res.badRequest("Google authentication Failed")
+)
+
+module.exports = router
