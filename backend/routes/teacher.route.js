@@ -1,6 +1,7 @@
 const express = require("express")
 const { query } = require("express-validator")
 const Teacher = require("../model/teacher")
+const { authenticate } = require("../middleware/auth")
 
 const router = express.Router()
 
@@ -90,3 +91,12 @@ router.get(
     }
   }
 )
+
+//Get the profile of doctor
+router.get("/me", authenticate, requireRole("teacher"), async (req, res) => {
+  const teacher = await Teacher.findById(req.user._id).select(
+    "-password -googleId"
+  )
+
+  res.ok(teacher, "Profile fetched")
+})
