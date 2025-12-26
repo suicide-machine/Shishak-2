@@ -7,6 +7,9 @@ const bodyParser = require("body-parser")
 
 require("dotenv").config()
 
+require("./config/passport")
+const passportLib = require("passport")
+
 const response = require("./middleware/response")
 
 const app = express()
@@ -35,13 +38,18 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //used response
 app.use(response)
 
+//Initialize passport
+app.use(passportLib.initialize())
+
 //Mongodb connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err))
 
-app.use("/api/auth", require("./routes/auth"))
+app.use("/api/auth", require("./routes/auth.route"))
+app.use("/api/teacher", require("./routes/teacher.route"))
+app.use("/api/student", require("./routes/student.route"))
 
 app.get("/health", (req, res) =>
   res.ok({ time: new Date().toISOString() }, "OK")
