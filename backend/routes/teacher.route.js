@@ -1,5 +1,5 @@
 const express = require("express")
-const { query } = require("express-validator")
+const { query, body } = require("express-validator")
 const Teacher = require("../model/teacher")
 const { authenticate } = require("../middleware/auth")
 
@@ -92,7 +92,7 @@ router.get(
   }
 )
 
-//Get the profile of doctor
+//Get the profile of teacher
 router.get("/me", authenticate, requireRole("teacher"), async (req, res) => {
   const teacher = await Teacher.findById(req.user._id).select(
     "-password -googleId"
@@ -100,3 +100,45 @@ router.get("/me", authenticate, requireRole("teacher"), async (req, res) => {
 
   res.ok(teacher, "Profile fetched")
 })
+
+//update teacher profile
+router.put(
+  "/onboarding/update",
+  authenticate,
+  requireRole("teacher"),
+  [
+    body("name").optional().notEmpty(),
+    body("subject").optional().notEmpty(),
+    body("qualification").optional().notEmpty(),
+    body("category").optional().notEmpty(),
+    body("experience").optional().isInt({ min: 0 }),
+    body("about").optional().isString(),
+    body("hourlyRate").optional().isInt({ min: 0 }),
+    body("locationInfo").optional().isObject(),
+    body("availabilityRange.startDate").optional().isISO8601(),
+    body("availabilityRange.endDate").optional().isISO8601(),
+    body("availabilityRange.excludedWeekdays").optional().isArray(),
+    body("dailyTimeRanges").isArray({ min: 1 }),
+    body("dailyTimeRanges.*.start").isString(),
+    body("dailyTimeRanges.*.end").isString(),
+    body("slotDurationMinutes").optional().isInt({ min: 5, max: 180 }),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const updated = { ...req.body }
+
+      delete updated.password
+
+      updated.isVerified = true
+
+      const teacher = await Teacher.findByIdAndUpdate(req.user._id, updated, {
+        new: true,
+      }).select("-password -googleId")
+
+      res.ok(teacher, "Profile updated")
+    } catch (error) {
+      res.serverError("updated failed", [error.message])
+    }
+  }
+)
