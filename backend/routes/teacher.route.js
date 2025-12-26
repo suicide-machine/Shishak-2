@@ -1,7 +1,8 @@
 const express = require("express")
 const { query, body } = require("express-validator")
 const Teacher = require("../model/teacher")
-const { authenticate } = require("../middleware/auth")
+const { authenticate, requireRole } = require("../middleware/auth")
+const validate = require("../middleware/validate")
 
 const router = express.Router()
 
