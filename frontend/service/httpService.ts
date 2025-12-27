@@ -66,4 +66,61 @@ class HttpService {
       throw error
     }
   }
+
+  //Method with authentication
+  async getWithAuth<T = any>(
+    endPoint: string,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "GET", null, true, options)
+  }
+
+  async postWithAuth<T = any>(
+    endPoint: string,
+    body: any,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "POST", body, true, options)
+  }
+
+  async putWithAuth<T = any>(
+    endPoint: string,
+    body: any,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "PUT", body, true, options)
+  }
+
+  async deleteWithAuth<T = any>(
+    endPoint: string,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "DELETE", null, true, options)
+  }
+
+  async postWithoutAuth<T = any>(
+    endPoint: string,
+    body: any,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "POST", body, false, options)
+  }
+
+  async getWithoutAuth<T = any>(
+    endPoint: string,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest<T>(endPoint, "GET", null, false, options)
+  }
 }
+
+//Export the singleton instance
+export const httpService = new HttpService()
+
+//bind create a new function where this is permanently set to the instance of HttpService
+export const getWithAuth = httpService.getWithAuth.bind(httpService)
+export const postWithAuth = httpService.postWithAuth.bind(httpService)
+export const putWithAuth = httpService.putWithAuth.bind(httpService)
+export const deleteWithAuth = httpService.deleteWithAuth.bind(httpService)
+export const postWithoutAuth = httpService.postWithoutAuth.bind(httpService)
+export const getWithoutAuth = httpService.getWithoutAuth.bind(httpService)
