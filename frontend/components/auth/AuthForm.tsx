@@ -7,6 +7,8 @@ interface AuthFormProps {
   userRole: "teacher" | "student"
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL
+
 const AuthForm = ({ type, userRole }: AuthFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -64,6 +66,9 @@ const AuthForm = ({ type, userRole }: AuthFormProps) => {
     }
   }
 
+  const handleGoogleAuth = () => {
+    window.location.href = `${BASE_URL}/auth/google?type=${userRole}`
+  }
   return <div>AuthForm</div>
 }
 
