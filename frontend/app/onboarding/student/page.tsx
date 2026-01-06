@@ -1,7 +1,10 @@
-import React from "react"
+import StudentOnboardingForm from "@/components/student/StudentOnboardingForm"
 
-const page = () => {
-  return <div>page</div>
+export const metadata = {
+  title: "Complete Your Student Profile - Shikshak",
+  description: "Complete your profile to start booking tutor.",
 }
 
-export default page
+export default function StudentOnboardingPage() {
+  return <StudentOnboardingForm />
+}
