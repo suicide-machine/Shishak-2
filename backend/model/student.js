@@ -79,11 +79,15 @@ const studentSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-studentSchema.pre("save", function (next) {
-  if (this.dob && this.isModified("dob")) {
-    this.age = computeAgeFromDob(this.dob)
-  }
-  next()
-})
+// studentSchema.pre("save", function (next) {
+//   try {
+//     if (this.dob && this.isModified("dob")) {
+//       this.age = computeAgeFromDob(this.dob)
+//     }
+//     next()
+//   } catch (error) {
+//     next(error) // ← Pass error to Mongoose error handler
+//   }
+// })
 
 module.exports = mongoose.model("Student", studentSchema)
