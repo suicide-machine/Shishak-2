@@ -111,7 +111,46 @@ const StudentOnboardingForm = () => {
     }
   }
 
-  return <div>SudentOnboardingForm</div>
+  return (
+    <div className="w-full max-w-2xl mx-auto">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Welcome {user?.name} to Shikshak
+        </h1>
+
+        <p className="text-gray-600">
+          Complete your profile to start booking tutors
+        </p>
+      </div>
+
+      {/* Progress step */}
+      <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center">
+          {[1, 2, 3].map((step) => (
+            <React.Fragment key={step}>
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                  currentStep >= step
+                    ? "bg-blue-600 border-blue-600 text-white"
+                    : "border-gray-300 text-gray-400"
+                }`}
+              >
+                {step}
+              </div>
+
+              {step < 3 && (
+                <div
+                  className={`w-20 h-1 ${
+                    currentStep > step ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                ></div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default StudentOnboardingForm
