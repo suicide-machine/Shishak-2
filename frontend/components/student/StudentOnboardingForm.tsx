@@ -99,6 +99,18 @@ const StudentOnboardingForm = () => {
     }
   }
 
+  const handleNext = (): void => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handlePrevious = (): void => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
   return <div>SudentOnboardingForm</div>
 }
 
