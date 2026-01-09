@@ -4,7 +4,7 @@ import { userAuthStore } from "@/store/authStore"
 import { useRouter } from "next/navigation"
 import React, { ChangeEvent, useState } from "react"
 import { Card, CardContent } from "../ui/card"
-import { User } from "lucide-react"
+import { Phone, User } from "lucide-react"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import {
@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Button } from "../ui/button"
 
 interface Guardian {
   name: string
@@ -250,6 +251,57 @@ const StudentOnboardingForm = () => {
               </div>
             </div>
           )}
+
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 mb-6">
+                <Phone className="w-5 h-5 text-blue-600" />
+
+                <h2 className="text-xl font-semibold">Guardian Contact</h2>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-between pt-8">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+            >
+              Previous
+            </Button>
+
+            {currentStep < 3 ? (
+              <Button
+                type="button"
+                onClick={handleNext}
+                disabled={
+                  (currentStep === 1 &&
+                    (!formData.phone || !formData.dob || !formData.gender)) ||
+                  (currentStep === 2 &&
+                    (!formData.guardian.name ||
+                      !formData.guardian.phone ||
+                      !formData.guardian.relationship)) ||
+                  (currentStep === 3 &&
+                    (!formData.academicBackground.previousQualifications ||
+                      !formData.academicBackground.areasOfDifficulty ||
+                      !formData.academicBackground.specialRequirements))
+                }
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {loading ? "Completing Setup..." : "Complete Profile"}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
