@@ -3,6 +3,17 @@
 import { userAuthStore } from "@/store/authStore"
 import { useRouter } from "next/navigation"
 import React, { ChangeEvent, useState } from "react"
+import { Card, CardContent } from "../ui/card"
+import { User } from "lucide-react"
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
 
 interface Guardian {
   name: string
@@ -149,6 +160,98 @@ const StudentOnboardingForm = () => {
           ))}
         </div>
       </div>
+
+      <Card className="shadow-lg">
+        <CardContent className="p-8">
+          {currentStep === 1 && (
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 mb-6">
+                <User className="w-5 h-5 text-blue-600" />
+
+                <h2 className="text-xl font-semibold">Basic Information</h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number </Label>
+
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    placeholder="+91 985467238"
+                    onChange={handleInputChnage}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dob">Date of Birth </Label>
+                  <Input
+                    id="dob"
+                    name="dob"
+                    type="date"
+                    value={formData.dob}
+                    onChange={handleInputChnage}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="gender">Gender</Label>
+
+                  <Select
+                    value={formData.gender}
+                    onValueChange={(value) =>
+                      handleSelectChange("gender", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender"></SelectValue>
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+
+                      <SelectItem value="female">Female</SelectItem>
+
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="educationLevel">Education Level</Label>
+
+                  <Select
+                    value={formData.educationLevel}
+                    onValueChange={(value) =>
+                      handleSelectChange("educationLevel", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Education Level"></SelectValue>
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="primary">Primary</SelectItem>
+
+                      <SelectItem value="secondary">Secondary</SelectItem>
+
+                      <SelectItem value="high-school">High School</SelectItem>
+
+                      <SelectItem value="college">College</SelectItem>
+
+                      <SelectItem value="university">University</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
