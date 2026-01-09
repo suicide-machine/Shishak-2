@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
+import { Alert, AlertDescription } from "../ui/alert"
 
 interface Guardian {
   name: string
@@ -74,7 +75,7 @@ const StudentOnboardingForm = () => {
   const handleGurdianChnage = (field: keyof Guardian, value: string): void => {
     setFormData((prev) => ({
       ...prev,
-      emergencyContact: {
+      guardian: {
         ...prev.guardian,
         [field]: value,
       },
@@ -258,6 +259,70 @@ const StudentOnboardingForm = () => {
                 <Phone className="w-5 h-5 text-blue-600" />
 
                 <h2 className="text-xl font-semibold">Guardian Contact</h2>
+              </div>
+
+              <Alert>
+                <AlertDescription>
+                  This information will be used to contact someone on your
+                  behalf in case of any problem during tutoring.
+                </AlertDescription>
+              </Alert>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="guardianName">Contact Name</Label>
+
+                  <Input
+                    id="guardianName"
+                    value={formData.guardian.name}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleGurdianChnage("name", e.target.value)
+                    }
+                    placeholder="Full name"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="guardianPhone">Contact Phone</Label>
+
+                  <Input
+                    id="guardianPhone"
+                    value={formData.guardian.phone}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleGurdianChnage("phone", e.target.value)
+                    }
+                    placeholder="+91 9919326233"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="relationship">Relationship</Label>
+
+                  <Select
+                    value={formData.guardian.relationship}
+                    onValueChange={(value) =>
+                      handleGurdianChnage("relationship", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select relationship"></SelectValue>
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="father">Father</SelectItem>
+
+                      <SelectItem value="mother">Mother</SelectItem>
+
+                      <SelectItem value="brother">Brother</SelectItem>
+
+                      <SelectItem value="friend">Friend</SelectItem>
+
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           )}
