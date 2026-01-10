@@ -66,6 +66,43 @@ const TeacherOnboardingForm = () => {
     }))
   }
 
+  const handleSubmit = async (): Promise<void> => {
+    try {
+      await updateProfile({
+        subject: formData.subject,
+        category: formData.categories,
+        qualification: formData.qualification,
+        experience: formData.experience,
+        about: formData.about,
+        hourlyRate: formData.hourlyRate,
+        locationInfo: formData.locationInfo,
+        availabilityRange: {
+          startDate: new Date(formData.availabilityRange.startDate),
+          endDate: new Date(formData.availabilityRange.endDate),
+          excludedWeekdays: formData.availabilityRange.excludedWeekdays,
+        },
+        dailyTimeRanges: formData.dailyTimeRanges,
+        slotDurationMinutes: formData.slotDurationMinutes,
+      })
+
+      router.push("/teacher/dashboard")
+    } catch (error) {
+      console.error("Profile update failed", error)
+    }
+  }
+
+  const handleNext = (): void => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handlePrevious = (): void => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
   return <div>TeacherOnboardingForm</div>
 }
 
