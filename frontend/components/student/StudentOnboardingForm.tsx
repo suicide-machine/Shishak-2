@@ -16,6 +16,7 @@ import {
 } from "../ui/select"
 import { Button } from "../ui/button"
 import { Alert, AlertDescription } from "../ui/alert"
+import { Textarea } from "../ui/textarea"
 
 interface Guardian {
   name: string
@@ -88,7 +89,7 @@ const StudentOnboardingForm = () => {
   ): void => {
     setFormData((prev) => ({
       ...prev,
-      medicalHistory: {
+      academicBackground: {
         ...prev.academicBackground,
         [field]: value,
       },
@@ -322,6 +323,80 @@ const StudentOnboardingForm = () => {
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <div className="flex items-center space-x-2 mb-6">
+                <Phone className="w-5 h-5 text-blue-600" />
+
+                <h2 className="text-xl font-semibold">Academic Infomation</h2>
+              </div>
+
+              <Alert>
+                <AlertDescription>
+                  This information helps us to provide a better tutor. All
+                  information is kept confidential and secure.
+                </AlertDescription>
+              </Alert>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="previousQualifications">
+                    Previous Qualifications
+                  </Label>
+
+                  <Textarea
+                    id="previousQualifications"
+                    value={formData.academicBackground.previousQualifications}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      handleAcademicBackgroundChnage(
+                        "previousQualifications",
+                        e.target.value
+                      )
+                    }
+                    placeholder="e.g., 70% marks in class 9 or 80 mark in maths"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="areasOfDifficulty">Areas Of Difficulty</Label>
+
+                  <Textarea
+                    id="areasOfDifficulty"
+                    value={formData.academicBackground.areasOfDifficulty}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      handleAcademicBackgroundChnage(
+                        "areasOfDifficulty",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Getting problem in maths"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="specialRequirements">
+                    Special Requirements
+                  </Label>
+
+                  <Textarea
+                    id="specialRequirements"
+                    value={formData.academicBackground.specialRequirements}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      handleAcademicBackgroundChnage(
+                        "specialRequirements",
+                        e.target.value
+                      )
+                    }
+                    placeholder="e.g., Strictness of tutor, English Speacking Fluently"
+                    rows={3}
+                  />
                 </div>
               </div>
             </div>
