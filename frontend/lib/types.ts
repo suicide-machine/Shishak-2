@@ -49,3 +49,33 @@ export interface User {
   }>
   slotDurationMinutes?: number
 }
+
+export interface TimeRange {
+  start: string
+  end: string
+}
+
+export interface AvailabilityRange {
+  startDate: string
+  endDate: string
+  excludedWeekdays: number[]
+}
+
+export interface LocationInfo {
+  name: string
+  address: string
+  city: string
+}
+
+export interface TeacherFormData {
+  subject: string
+  categories: string[] // Explicitly typed as string array
+  qualification: string
+  experience: string
+  about: string
+  hourlyRate: string
+  locationInfo: LocationInfo
+  availabilityRange: AvailabilityRange
+  dailyTimeRanges: TimeRange[]
+  slotDurationMinutes?: number
+}
