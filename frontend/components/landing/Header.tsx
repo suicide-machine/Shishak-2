@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { userAuthStore } from "@/store/authStore"
 
 interface HeaderProps {
   showDashboardNav?: boolean
@@ -28,16 +29,9 @@ interface NavigationItem {
 }
 
 const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
-  const user = {
-    type: "student",
-    name: "Arya",
-    profileImage: "",
-    email: "arya@gmail.com",
-  }
+  const { user, isAuthenticated } = userAuthStore()
 
   const pathname = usePathname()
-
-  const isAuthenticated = false
 
   const getDashboardNavigation = (): NavigationItem[] => {
     if (!user || !showDashboardNav) return []

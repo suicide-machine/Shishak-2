@@ -5,12 +5,13 @@ import Footer from "@/components/landing/Footer"
 import Header from "@/components/landing/Header"
 import LandingHero from "@/components/landing/LandingHero"
 import TestimonialsSection from "@/components/landing/TestimonialsSection"
+import { userAuthStore } from "@/store/authStore"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
 export default function Home() {
-  const user = { type: "student" }
+  const { user } = userAuthStore()
   const router = useRouter()
 
   useEffect(() => {

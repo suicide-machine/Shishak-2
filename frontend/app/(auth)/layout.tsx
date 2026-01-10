@@ -1,24 +1,22 @@
 "use client"
 
+import { userAuthStore } from "@/store/authStore"
 import { redirect } from "next/navigation"
 import React, { useEffect } from "react"
 
 const layout = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = false
-
-  const user = {
-    type: "student",
-    name: "Arya",
-    profileImage: "",
-    email: "arya@gmail.com",
-  }
+  const { isAuthenticated, user } = userAuthStore()
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.type === "teacher") {
-        redirect("/teacher/dashboard")
+      if (!user.isVerified) {
+        redirect(`/onboarding/${user.type}`)
       } else {
-        redirect("/student/dashboard")
+        if (user.type === "teacher") {
+          redirect("/teacher/dashboard")
+        } else {
+          redirect("/student/dashboard")
+        }
       }
     }
   }, [isAuthenticated, user])
