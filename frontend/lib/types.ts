@@ -79,3 +79,48 @@ export interface TeacherFormData {
   dailyTimeRanges: TimeRange[]
   slotDurationMinutes?: number
 }
+
+// interfaces/Doctor.ts
+export interface Teacher {
+  _id: string
+  name: string
+  email: string
+  subject: string
+  category: string[]
+  qualification: string
+  experience: number
+  about: string
+  hourlyRate: number
+  locationInfo: {
+    name: string
+    address: string
+    city: string
+  }
+  availabilityRange: {
+    startDate: Date
+    endDate: Date
+    excludedWeekdays: number[]
+  }
+  dailyTimeRanges: {
+    start: string // e.g., "09:00"
+    end: string // e.g., "12:00"
+  }[]
+  slotDurationMinutes: number
+  profileImage: string
+  isVerified: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface TeacherFilters {
+  search?: string
+  subject?: string
+  category?: string
+  city?: string
+  minFees?: number
+  maxFees?: number
+  sortBy?: "fees" | "experience" | "name" | "createdAt"
+  sortOrder?: "asc" | "desc"
+  page?: number
+  limit?: number
+}
