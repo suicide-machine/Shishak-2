@@ -103,7 +103,7 @@ const TeacherOnboardingForm = () => {
     }
   }
 
-  return <div>TeacherOnboardingForm</div>
+  return <div></div>
 }
 
 export default TeacherOnboardingForm
