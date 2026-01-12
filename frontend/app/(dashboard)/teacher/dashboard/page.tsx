@@ -1,7 +1,8 @@
-import React from "react"
+import Loader from "@/components/Loader"
+import React, { Suspense } from "react"
 
 const page = () => {
-  return <div>page</div>
+  return <Suspense fallback={<Loader />}>page</Suspense>
 }
 
 export default page
