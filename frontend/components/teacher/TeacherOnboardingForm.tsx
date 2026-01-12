@@ -17,6 +17,7 @@ import { subjectCategoriesList, subjects } from "@/lib/constant"
 import { Input } from "../ui/input"
 import { Checkbox } from "../ui/checkbox"
 import { Button } from "../ui/button"
+import { Textarea } from "../ui/textarea"
 
 const TeacherOnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState<number>(1)
@@ -249,6 +250,61 @@ const TeacherOnboardingForm = () => {
           {currentStep === 2 && (
             <div className="space-y-6">
               <h2 className="text-xl font-semibold mb-4">Location</h2>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="locationName">Location Name</Label>
+
+                  <Input
+                    id="locationName"
+                    type="text"
+                    value={formData.locationInfo.name}
+                    placeholder="e.g., Senikuthi"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleLocationInfoChange("name", e.target.value)
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="address">Address</Label>
+
+                  <Textarea
+                    id="address"
+                    value={formData.locationInfo.address}
+                    placeholder="Full address of your location"
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                      handleLocationInfoChange("address", e.target.value)
+                    }
+                    rows={3}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2 ">
+                  <Label htmlFor="city">City</Label>
+
+                  <Input
+                    id="city"
+                    type="text"
+                    value={formData.locationInfo.city}
+                    placeholder="e.g., Chandmari"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleLocationInfoChange("city", e.target.value)
+                    }
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold mb-4">
+                Availability Settings
+              </h2>
             </div>
           )}
 
