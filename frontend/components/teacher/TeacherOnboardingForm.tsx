@@ -305,6 +305,138 @@ const TeacherOnboardingForm = () => {
               <h2 className="text-xl font-semibold mb-4">
                 Availability Settings
               </h2>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate">Available From</Label>
+
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={formData.availabilityRange.startDate}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        availabilityRange: {
+                          ...prev.availabilityRange,
+                          startDate: e.target.value,
+                        },
+                      }))
+                    }}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="endDate">Available Until</Label>
+
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={formData.availabilityRange.endDate}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        availabilityRange: {
+                          ...prev.availabilityRange,
+                          endDate: e.target.value,
+                        },
+                      }))
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Tutoring Slot Duration</Label>
+
+                <Select
+                  value={formData.slotDurationMinutes?.toString() || "60"}
+                  onValueChange={(value: string) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      slotDurationMinutes: parseInt(value),
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select slot duration"></SelectValue>
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="60">60 minutes</SelectItem>
+                    <SelectItem value="75">1 hour 15 mins</SelectItem>
+                    <SelectItem value="90">1 hour 30 minutes</SelectItem>
+                    <SelectItem value="120">2 hours</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <p className="text-sm text-gray-600">
+                  Duration for each student tutoring slot
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Working Days</Label>
+
+                <p className="text-sm text-gray-600">
+                  Select the days you are NOT available
+                </p>
+
+                <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                  {[
+                    { day: "Sunday", value: 0 },
+                    { day: "Monday", value: 1 },
+                    { day: "Tuesday", value: 2 },
+                    { day: "Wednesday", value: 3 },
+                    { day: "Thursday", value: 4 },
+                    { day: "Friday", value: 5 },
+                    { day: "Saturday", value: 6 },
+                  ].map(({ day, value }) => (
+                    <div key={value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`day-${value}`}
+                        checked={formData.availabilityRange.excludedWeekdays.includes(
+                          value
+                        )}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setFormData((prev) => ({
+                              ...prev,
+                              availabilityRange: {
+                                ...prev.availabilityRange,
+                                excludedWeekdays: [
+                                  ...prev.availabilityRange.excludedWeekdays,
+                                  value,
+                                ],
+                              },
+                            }))
+                          } else {
+                            setFormData((prev) => ({
+                              ...prev,
+                              availabilityRange: {
+                                ...prev.availabilityRange,
+                                excludedWeekdays:
+                                  prev.availabilityRange.excludedWeekdays.filter(
+                                    (d) => d !== value
+                                  ),
+                              },
+                            }))
+                          }
+                        }}
+                      />
+
+                      <label
+                        htmlFor={`day-${value}`}
+                        className="text-sm font-medium cursor-pointer"
+                      >
+                        {day.slice(0, 3)}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
 
