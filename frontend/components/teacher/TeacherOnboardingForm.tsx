@@ -437,6 +437,100 @@ const TeacherOnboardingForm = () => {
                   ))}
                 </div>
               </div>
+
+              <div className="space-y-4">
+                <Label>Preffered Tutoring Hours</Label>
+
+                <p className="text-sm text-gray-600">
+                  Set your tutoring hours for each day (It will help us for
+                  better engagement)
+                </p>
+
+                {formData.dailyTimeRanges.map((range, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-4 p-4 border rounded-lg"
+                  >
+                    <div className="flex-1">
+                      <Label className="text-sm">
+                        Tutoring {index + 1} - Start time
+                      </Label>
+
+                      <Input
+                        type="time"
+                        value={range.start}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          const newRange = [...formData.dailyTimeRanges]
+                          newRange[index].start = e.target.value
+                          setFormData((prev) => ({
+                            ...prev,
+                            dailyTimeRanges: newRange,
+                          }))
+                        }}
+                        required
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <Label className="text-sm">
+                        Tutoring {index + 1} - End time
+                      </Label>
+
+                      <Input
+                        type="time"
+                        value={range.end}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          const newRange = [...formData.dailyTimeRanges]
+                          newRange[index].end = e.target.value
+                          setFormData((prev) => ({
+                            ...prev,
+                            dailyTimeRanges: newRange,
+                          }))
+                        }}
+                        required
+                      />
+                    </div>
+
+                    {formData.dailyTimeRanges.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newRange = formData.dailyTimeRanges.filter(
+                            (_, i) => i !== index
+                          )
+                          setFormData((prev) => ({
+                            ...prev,
+                            dailyTimeRanges: newRange,
+                          }))
+                        }}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                ))}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      dailyTimeRanges: [
+                        ...prev.dailyTimeRanges,
+                        { start: "18:00", end: "20:00" },
+                      ],
+                    }))
+                  }}
+                  className="w-full"
+                >
+                  + Add Another Time
+                </Button>
+              </div>
             </div>
           )}
 
