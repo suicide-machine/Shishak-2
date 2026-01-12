@@ -16,6 +16,7 @@ import {
 import { subjectCategoriesList, subjects } from "@/lib/constant"
 import { Input } from "../ui/input"
 import { Checkbox } from "../ui/checkbox"
+import { Button } from "../ui/button"
 
 const TeacherOnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState<number>(1)
@@ -244,6 +245,42 @@ const TeacherOnboardingForm = () => {
               </div>
             </div>
           )}
+
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold mb-4">Location</h2>
+            </div>
+          )}
+
+          <div className="flex justify-between pt-8">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+            >
+              Previous
+            </Button>
+
+            {currentStep < 3 ? (
+              <Button
+                type="button"
+                onClick={handleNext}
+                disabled={currentStep === 1 && formData.categories.length === 0}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {loading ? "Completing Setup..." : "Complete Profile"}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
