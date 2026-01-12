@@ -1,7 +1,13 @@
-import React from "react"
+import Loader from "@/components/Loader"
+import StudentDashboardContent from "@/components/student/StudentDashboardContent"
+import React, { Suspense } from "react"
 
 const page = () => {
-  return <div>page</div>
+  return (
+    <Suspense fallback={<Loader />}>
+      <StudentDashboardContent />
+    </Suspense>
+  )
 }
 
 export default page
