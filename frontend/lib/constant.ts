@@ -75,17 +75,17 @@ export const subjectCategories = [
 ]
 
 // Subject categories (matches backend)
-// export const subjectCategoriesList = [
-//   "Mathematics",
-//   "Science",
-//   "English & Writing",
-//   "Programming & CS",
-//   "Test Prep",
-//   "Foreign Languages",
-//   "Humanities & Arts",
-//   "Business & Finance",
-//   "Homework Help",
-// ]
+export const subjectCategoriesList = [
+  "Mathematics",
+  "Science",
+  "English & Writing",
+  "Programming & CS",
+  "Test Prep",
+  "Foreign Languages",
+  "Humanities & Arts",
+  "Business & Finance",
+  "Homework Help",
+]
 
 // export const expertiseLevels = [
 //   "Elementary School",
@@ -99,28 +99,28 @@ export const subjectCategories = [
 //   "Advanced",
 // ]
 
-// export const tutorSpecializations = [
-//   "Algebra",
-//   "Calculus",
-//   "Physics",
-//   "Chemistry",
-//   "Biology",
-//   "English Literature",
-//   "Creative Writing",
-//   "Python Programming",
-//   "Java",
-//   "Web Development",
-//   "SAT Prep",
-//   "ACT Prep",
-//   "Spanish",
-//   "French",
-//   "History",
-//   "Economics",
-//   "Statistics",
-//   "Machine Learning",
-//   "Data Science",
-//   "Art History",
-// ]
+export const subjects = [
+  "Algebra",
+  "Calculus",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "English Literature",
+  "Creative Writing",
+  "Python Programming",
+  "Java",
+  "Web Development",
+  "SAT Prep",
+  "ACT Prep",
+  "Spanish",
+  "French",
+  "History",
+  "Economics",
+  "Statistics",
+  "Machine Learning",
+  "Data Science",
+  "Art History",
+]
 
 export const testimonials = [
   {
