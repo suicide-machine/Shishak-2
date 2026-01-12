@@ -1,7 +1,12 @@
 import React from "react"
+import Header from "../landing/Header"
 
 const TeacherDashboardContent = () => {
-  return <div>TeacherDashboardContent</div>
+  return (
+    <>
+      <Header showDashboardNav={true} />
+    </>
+  )
 }
 
 export default TeacherDashboardContent
