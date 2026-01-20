@@ -29,7 +29,7 @@ app.use(
         .map((s) => s.trim())
         .filter(Boolean) || "*",
     credentials: true,
-  })
+  }),
 )
 
 app.use(bodyParser.json())
@@ -50,9 +50,10 @@ mongoose
 app.use("/api/auth", require("./routes/auth.route"))
 app.use("/api/teacher", require("./routes/teacher.route"))
 app.use("/api/student", require("./routes/student.route"))
+app.use("/api/appointment", require("./routes/appointment.route"))
 
 app.get("/health", (req, res) =>
-  res.ok({ time: new Date().toISOString() }, "OK")
+  res.ok({ time: new Date().toISOString() }, "OK"),
 )
 
 const PORT = process.env.PORT || 8000

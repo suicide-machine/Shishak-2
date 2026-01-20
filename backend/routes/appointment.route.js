@@ -1,6 +1,6 @@
 const express = require("express")
-const Appointment = require("../modal/Appointment")
-const { authenticate } = require("../middleware/auth")
+const Appointment = require("../model/appointment")
+const { authenticate, requireRole } = require("../middleware/auth")
 const { query, body } = require("express-validator")
 const validate = require("../middleware/validate")
 
@@ -109,3 +109,94 @@ router.get("/booked-slots/:teacherId/:date", async (req, res) => {
     res.serverError("Failed to fetch booked slot", [error.message])
   }
 })
+
+router.post(
+  "/book",
+  authenticate,
+  requireRole("student"),
+  [
+    body("teacherId").isMongoId().withMessage("valid teacher ID is required"),
+    body("slotStartIso")
+      .isISO8601()
+      .withMessage("valid start time is required"),
+    body("slotEndIso").isISO8601().withMessage("valid end time is required"),
+    body("appointmentType")
+      .isIn(["Video Appointment", "Voice Call"])
+      .withMessage("valid Appointment type required"),
+    body("subject").isString().trim().withMessage("subject is required"),
+    body("appointmentFees")
+      .isNumeric()
+      .withMessage("appointmentFees is required"),
+    body("platformFees").isNumeric().withMessage("platformFees is required"),
+    body("totalAmount").isNumeric().withMessage("totalAmount is required"),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const {
+        teacherId,
+        slotStartIso,
+        slotEndIso,
+        date,
+        appointmentType,
+        subject,
+        appointmentFees,
+        platformFees,
+        totalAmount,
+      } = req.body
+
+      const confictingAppointment = await Appointment.findOne({
+        doctorId,
+        status: { $in: ["Scheduled", "In Progress"] },
+        $or: [
+          {
+            slotStartIso: { $lt: new Date(slotEndIso) },
+            slotEndIso: { $gt: new Date(slotStartIso) },
+          },
+        ],
+      })
+
+      if (confictingAppointment) {
+        return res.forbidden("This time slot is alredy booked")
+      }
+
+      //Generate unique roomId
+      const zegoRoomId = `room_${Date.now()}_${Math.random()
+        .toString(36)
+        .substr(2, 9)}`
+
+      const appointment = new Appointment({
+        teacherId,
+        studentId: req.auth.id,
+        date: new Date(date),
+        slotStartIso: new Date(slotStartIso),
+        slotEndIso: new Date(slotEndIso),
+        appointmentType,
+        subject,
+        zegoRoomId,
+        status: "Scheduled",
+        appointmentFees,
+        platformFees,
+        totalAmount,
+        paymentStatus: "Pending",
+        payoutStatus: "Pending",
+      })
+
+      await appointment.save()
+
+      await appointment.populate(
+        "teacherId",
+        "name hourlyRate phone subject profileImage locationInfo",
+      )
+
+      await appointment.populate("studentId", "name email")
+
+      res.created(appointment, "Appointment booked successfully")
+    } catch (error) {
+      console.error("Book appointment error", error)
+      res.serverError("Failed to book appointment", [error.message])
+    }
+  },
+)
+
+module.exports = router
