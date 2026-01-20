@@ -57,7 +57,7 @@ const TeacherListPage = () => {
   }
 
   const activeFilterCount = Object.values(filters).filter(
-    (value) => value && value !== "experience" && value !== "desc"
+    (value) => value && value !== "experience" && value !== "desc",
   ).length
 
   return (
@@ -383,7 +383,21 @@ const TeacherListPage = () => {
             ))}
           </div>
         ) : (
-          <></>
+          <Card className="p-12 text-center">
+            <div className="text-gray-400 mb-4">
+              <Search className="w-16 h-16 mx-auto" />
+            </div>
+
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              No teacher found
+            </h3>
+
+            <p className="text-gray-500 mb-4">
+              Try adjusting your filters or search criteria
+            </p>
+
+            <Button onClick={clearFilters}>Clear Filters</Button>
+          </Card>
         )}
       </div>
     </div>
