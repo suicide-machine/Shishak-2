@@ -9,7 +9,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 import { cities, subjectCategories, subjects } from "@/lib/constant"
-import { Card } from "../ui/card"
+import { Card, CardContent } from "../ui/card"
 import {
   Select,
   SelectContent,
@@ -210,10 +210,79 @@ const TeacherListPage = () => {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Sort by
+                  </label>
+
+                  <Select
+                    value={filters.sortBy || "experience"}
+                    onValueChange={(value) =>
+                      handleFilterChange("sortBy", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="experience">Experience</SelectItem>
+
+                      <SelectItem value="hourlyRate">Hourly Rate</SelectItem>
+
+                      <SelectItem value="name">Name (A-Z)</SelectItem>
+
+                      <SelectItem value="createdAt">Newest First</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-end">
+                  <Button
+                    variant="outline"
+                    onClick={clearFilters}
+                    className="w-full"
+                  >
+                    Clear All Filters
+                  </Button>
+                </div>
               </div>
             </Card>
           )}
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-4 text-sm text-gray-600">
+          {loading ? "Seaching..." : `${teachers.length} teachers found`}
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i} className="amimate-plus">
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto"></div>
+
+                    <div className="space-y-2">
+                      <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                      <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                      <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                      <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                      <div className="h-10 bg-gray-200 rounded "></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : teachers.length > 0 ? (
+          <div></div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   )
