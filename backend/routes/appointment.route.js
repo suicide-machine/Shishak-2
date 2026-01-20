@@ -237,4 +237,56 @@ router.get("/:id", authenticate, async (req, res) => {
   }
 })
 
+//Join
+router.get("/join/:id", authenticate, async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id)
+      .populate("studentId", "name ")
+      .populate("teacherId", "name")
+
+    if (!appointment) {
+      return res.notFound("Appointment not found")
+    }
+
+    appointment.status = "In Progress"
+
+    await appointment.save()
+
+    res.ok(
+      { roomId: appointment.zegoRoomId, appointment },
+      "Appointment joined successfully",
+    )
+  } catch (error) {
+    console.error("Join appointment error", error)
+    res.serverError("Failed to Join appointment", [error.message])
+  }
+})
+
+//End
+router.put("/end/:id", authenticate, async (req, res) => {
+  try {
+    const { feedback, notes } = req.body
+
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: "Completed",
+        feedback,
+        notes,
+        updatedAt: new Date(),
+      },
+      { new: true },
+    ).populate("studentId teacherId")
+
+    if (!appointment) {
+      return res.notFound("Appointment not found")
+    }
+
+    res.ok(appointment, "Appointment completed successfully")
+  } catch (error) {
+    console.error("End appointment error", error)
+    res.serverError("Failed to End appointment", [error.message])
+  }
+})
+
 module.exports = router
