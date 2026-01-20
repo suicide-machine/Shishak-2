@@ -18,7 +18,7 @@ const availabilityRangeSchema = new mongoose.Schema(
     endDate: { type: String },
     excludedWeekdays: { type: [Number], default: [] }, //0-6 (Sun-Sat)
   },
-  { _id: false }
+  { _id: false },
 )
 
 const dailyTimeRangeSchema = new mongoose.Schema(
@@ -26,7 +26,7 @@ const dailyTimeRangeSchema = new mongoose.Schema(
     start: { type: String }, //09:00
     end: { type: String }, //12:00
   },
-  { _id: false }
+  { _id: false },
 )
 
 const teacherSchema = new mongoose.Schema({
@@ -79,6 +79,8 @@ const teacherSchema = new mongoose.Schema({
   slotDurationMinutes: { type: Number, default: 60 },
 
   isVerified: { type: Boolean, default: false },
+
+  isActive: { type: Boolean, default: true },
 })
 
 module.exports = mongoose.model("Teacher", teacherSchema)

@@ -10,7 +10,7 @@ const guardianSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 )
 
 // Academic History Schema (replaces medicalHistory)
@@ -20,7 +20,7 @@ const academicHistorySchema = new mongoose.Schema(
     areasOfDifficulty: { type: String, default: "" }, // Subjects/topics struggling with
     specialRequirements: { type: String, default: "" }, // Any special learning needs
   },
-  { _id: false }
+  { _id: false },
 )
 
 const studentSchema = new mongoose.Schema(
@@ -75,8 +75,10 @@ const studentSchema = new mongoose.Schema(
     academicBackground: academicHistorySchema,
 
     isVerified: { type: Boolean, default: false },
+
+    isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 )
 
 // studentSchema.pre("save", function (next) {
