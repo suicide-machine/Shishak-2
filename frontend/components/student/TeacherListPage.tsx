@@ -8,6 +8,7 @@ import { FilterIcon, Search } from "lucide-react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
+import { subjectCategories } from "@/lib/constant"
 
 const TeacherListPage = () => {
   const searchParams = useSearchParams()
@@ -94,6 +95,47 @@ const TeacherListPage = () => {
                 </Badge>
               )}
             </Button>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">
+              Browse by Category
+            </h3>
+
+            <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide">
+              <Button
+                variant={!filters.category ? "default" : "outline"}
+                className="shrink-0 rounded-full"
+                onClick={() => handleFilterChange("category", "")}
+              >
+                All Categories
+              </Button>
+
+              {subjectCategories.map((cat) => (
+                <Button
+                  key={cat.id}
+                  variant={
+                    filters.category === cat.title ? "default" : "outline"
+                  }
+                  className="shrink-0 rounded-full whitespace-nowrap"
+                  onClick={() => handleFilterChange("category", cat.title)}
+                >
+                  <div
+                    className={`w-6 h-6 ${cat.color} rounded-2xl flex items-center justify-center group-hover:shadow-xl transition-all duration-200`}
+                  >
+                    <svg
+                      className="w-6 h-6 text-white "
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d={cat.icon} />
+                    </svg>
+                  </div>
+
+                  {cat.title}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
