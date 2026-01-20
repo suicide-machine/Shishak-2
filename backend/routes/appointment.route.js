@@ -85,3 +85,27 @@ router.get(
     }
   },
 )
+
+//Get booked slot for tutor on specific date
+router.get("/booked-slots/:teacherId/:date", async (req, res) => {
+  try {
+    const { teacherId, date } = req.params
+
+    const startDay = new Date(date)
+    startDay.setHours(0, 0, 0, 0)
+    const endOfDay = new Date(date)
+    endOfDay.setHours(23, 59, 59, 999)
+
+    const bookedAppointment = await Appointment.find({
+      teacherId,
+      slotStartIso: { $gte: startDay, $lte: endOfDay },
+      status: { $ne: "Cancelled" },
+    }).select("slotStartIso")
+
+    const bookedSlot = bookedAppointment.map((apt) => apt.slotStartIso)
+
+    res.ok(bookedSlot, "Booked slot retrieved")
+  } catch (error) {
+    res.serverError("Failed to fetch booked slot", [error.message])
+  }
+})
