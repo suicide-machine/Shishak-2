@@ -273,16 +273,16 @@ export const socials = [
   },
 ]
 
-// export const cities = [
-//   "New York",
-//   "Los Angeles",
-//   "Chicago",
-//   "Houston",
-//   "Phoenix",
-//   "Philadelphia",
-//   "San Antonio",
-//   "San Diego",
-// ]
+export const cities = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Chennai",
+  "Kolkata",
+  "Hyderabad",
+  "Pune",
+  "Ahmedabad",
+]
 
 // export const learningApproaches = [
 //   {

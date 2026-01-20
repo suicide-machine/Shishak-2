@@ -4,11 +4,19 @@ import { useTeacherStore } from "@/store/teacherStore"
 import { useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import Header from "../landing/Header"
-import { FilterIcon, Search } from "lucide-react"
+import { FilterIcon, Search, X } from "lucide-react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { subjectCategories } from "@/lib/constant"
+import { cities, subjectCategories, subjects } from "@/lib/constant"
+import { Card } from "../ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
 
 const TeacherListPage = () => {
   const searchParams = useSearchParams()
@@ -137,6 +145,74 @@ const TeacherListPage = () => {
               ))}
             </div>
           </div>
+
+          {showFilters && (
+            <Card className="p-4 mb-4 bg-gray-50">
+              <div className="flex items-center justify-between mb-4 ">
+                <h3 className="font-semibold">Advanced Filters</h3>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowFilters(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Subjects
+                  </label>
+
+                  <Select
+                    value={filters.subject || ""}
+                    onValueChange={(value) =>
+                      handleFilterChange("subject", value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Subjects"></SelectValue>
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="all">All Subjects</SelectItem>
+
+                      {subjects.map((sub) => (
+                        <SelectItem key={sub} value={sub}>
+                          {sub}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Location
+                  </label>
+
+                  <Select
+                    value={filters.city || ""}
+                    onValueChange={(value) => handleFilterChange("city", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="All locations"></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All locations</SelectItem>
+                      {cities.map((city) => (
+                        <SelectItem key={city} value={city}>
+                          {city}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </div>
