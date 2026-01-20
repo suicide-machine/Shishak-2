@@ -40,8 +40,47 @@ router.get(
 
       res.ok(appointment, "Appointment fetched successfully")
     } catch (error) {
-      console.error("Doctor appointment fetch error", error)
+      console.error("Teacher appointment fetch error", error)
 
+      res.serverError("Failed to fetch appointment", [error.message])
+    }
+  },
+)
+
+//student appointment
+router.get(
+  "/student",
+  authenticate,
+  requireRole("student"),
+  [
+    query("status").optional().isArray().withMessage("Status can be an array"),
+    query("status.*")
+      .optional()
+      .isString()
+      .withMessage("Each status must be an string"),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const { status } = req.query
+      const filter = { studentId: req.auth.id }
+
+      if (status) {
+        const statusArray = Array.isArray(status) ? status : [status]
+        filter.status = { $in: statusArray }
+      }
+
+      const appointment = await Appointment.find(filter)
+        .populate(
+          "teacherId",
+          "name hourlyRate phone subject locationInfo profileImage",
+        )
+        .populate("studentId", "name email profileImage")
+        .sort({ slotStartIso: 1, slotEndIso: 1 })
+
+      res.ok(appointment, "Appointment fetched successfully")
+    } catch (error) {
+      console.error("Student appointment fetch error", error)
       res.serverError("Failed to fetch appointment", [error.message])
     }
   },
