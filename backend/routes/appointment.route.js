@@ -289,4 +289,36 @@ router.put("/end/:id", authenticate, async (req, res) => {
   }
 })
 
+//update appointment status by teacher
+router.put(
+  "/status/:id",
+  authenticate,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const { status } = req.body
+      const appointment = await Appointment.findById(req.params.id).populate(
+        "studentId teacherId",
+      )
+
+      if (!appointment) {
+        return res.notFound("Appointment not found")
+      }
+
+      if (appointment.teacherId._id.toString() !== req.auth.id) {
+        return res.forbidden("Access denied")
+      }
+
+      appointment.status = status
+      appointment.updatedAt = new Date()
+      await appointment.save()
+
+      res.ok(appointment, "Appointment status updated successfully")
+    } catch (error) {
+      console.error("updated Appointment status error", error)
+      res.serverError("Failed to updated Appointment status", [error.message])
+    }
+  },
+)
+
 module.exports = router
