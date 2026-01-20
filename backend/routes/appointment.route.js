@@ -199,4 +199,42 @@ router.post(
   },
 )
 
+//Get single appointment by id
+router.get("/:id", authenticate, async (req, res) => {
+  try {
+    const appointment = await Appointment.find(filter)
+      .populate(
+        "teacherId",
+        "name hourlyRate phone subject locationInfo profileImage",
+      )
+      .populate("studentId", "name email profileImage dob age")
+
+    if (!appointment) {
+      return res.notFound("Appointment not found")
+    }
+
+    //check if user has access to this appointment
+    const userRole = req.auth.type
+
+    if (
+      userRole === "teacher" &&
+      appointment.teacherId._id.toString() !== req.auth.id
+    ) {
+      return res.forbidden("Access denied")
+    }
+
+    if (
+      userRole === "student" &&
+      appointment.studentId._id.toString() !== req.auth.id
+    ) {
+      return res.forbidden("Access denied")
+    }
+
+    res.ok({ appointment }, "Appointment fetched successfully")
+  } catch (error) {
+    console.error("Get appointment error", error)
+    res.serverError("Failed to Get appointment", [error.message])
+  }
+})
+
 module.exports = router
