@@ -4,7 +4,7 @@ import { useTeacherStore } from "@/store/teacherStore"
 import { useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import Header from "../landing/Header"
-import { FilterIcon, Search, X } from "lucide-react"
+import { FilterIcon, MapPin, Search, Star, X } from "lucide-react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
@@ -17,6 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import Link from "next/link"
 
 const TeacherListPage = () => {
   const searchParams = useSearchParams()
@@ -279,7 +281,107 @@ const TeacherListPage = () => {
             ))}
           </div>
         ) : teachers.length > 0 ? (
-          <div></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {teachers.map((teacher) => (
+              <Card
+                key={teacher._id}
+                className="hover:shadow-xl transition-all duration-300 bg-white border-0 shadow-md h-full"
+              >
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="text-center mb-4">
+                    <Avatar className="w-20 h-20 mx-auto mb-3">
+                      <AvatarImage
+                        src={teacher.profileImage}
+                        alt={teacher.name}
+                        className="object-cover"
+                      />
+
+                      <AvatarFallback className="bg-linear-to-br from-blue-100 to-blue-200 text-blue-700 text-xl font-bold">
+                        {teacher.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <h3 className="text-lg font-bold text-blue-700 mb-1">
+                      {teacher.name}
+                    </h3>
+
+                    <p className="text-gray-600 text-sm mb-1">
+                      {teacher.subject}
+                    </p>
+
+                    <p className="text-gray-500 text-xs mb-2">
+                      {teacher.experience} years experience
+                    </p>
+
+                    <div className="flex items-center justify-center space-x-1 mb-3">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className="w-4 h-4 fill-orange-400 text-orange-400"
+                          />
+                        ))}
+                      </div>
+
+                      <span className="font-bold">5.0</span>
+                      <span className="text-gray-500 text-xs">(620)</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 justify-center mb-4">
+                    {teacher.category?.slice(0, 2).map((category, idx) => (
+                      <Badge
+                        key={idx}
+                        variant="secondary"
+                        className="bg-blue-50 text-blue-700 border-blue-200 text-xs"
+                      >
+                        {category}
+                      </Badge>
+                    ))}
+
+                    <Badge
+                      variant="secondary"
+                      className="bg-yellow-50 text-yellow-700 border-yellow-200 text-xs"
+                    >
+                      <Star className="w-3 h-3 mr-1" />
+                      Popular
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2 mb-4 text-center">
+                    <div className="flex items-center justify-center text-gray-600">
+                      <MapPin className="w-4 h-4 mr-1" />
+
+                      <span className="text-sm">
+                        {teacher.locationInfo.city}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-center items-center gap-2 text-center">
+                      <p className="text-gray-600 text-md font-semibold">
+                        Tutoring Fee :
+                      </p>
+
+                      <p className="font-bold text-green-600 text-lg">
+                        ₹{teacher.hourlyRate} / (per hour)
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto">
+                    <Link
+                      href={`/student/booking/${teacher._id}`}
+                      className="block"
+                    >
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg ply-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all">
+                        Book for Tutoring
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         ) : (
           <></>
         )}
