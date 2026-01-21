@@ -1,3 +1,4 @@
+import { getWithAuth } from "@/service/httpService"
 import { create } from "zustand"
 
 export interface Appointment {
@@ -89,7 +90,73 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   setCurrentAppointment: (appointment) =>
     set({ currentAppointment: appointment }),
 
-  fetchAppointments: async (role, tab = "", filters = {}) => {},
+  fetchAppointments: async (role, tab = "", filters = {}) => {
+    set({ loading: true, error: null })
 
-  fetchAppointmentById: async (appointmentId) => {},
+    try {
+      const endPoint =
+        role === "teacher" ? "/appointment/teacher" : "/appointment/student"
+
+      const queryParams = new URLSearchParams()
+
+      if (tab === "upcoming") {
+        queryParams.append("status", "Scheduled")
+        queryParams.append("status", "In Progress")
+      } else if (tab === "past") {
+        queryParams.append("status", "Completed")
+        queryParams.append("status", "Cancelled")
+      }
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (
+          value !== undefined &&
+          value !== null &&
+          value !== "" &&
+          key !== "status"
+        ) {
+          if (Array.isArray(value)) {
+            value.forEach((v) => queryParams.append(key, v.toString()))
+          } else {
+            queryParams.append(key, value.toString())
+          }
+        }
+      })
+
+      const response = await getWithAuth(
+        `${endPoint}?${queryParams.toString()}`,
+      )
+
+      set({ appointments: response.data || [] })
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
+
+  fetchAppointmentById: async (appointmentId) => {
+    set({ loading: true, error: null })
+
+    try {
+      const response = await getWithAuth(`/appointment/${appointmentId}`)
+
+      set({ currentAppointment: response?.data?.appointment })
+
+      return response?.data?.appointment
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
+
+  fetchBookedSlots: async (teacherId, date) => {},
+
+  bookAppointment: async (data) => {},
+
+    joinAppointment: async (appointmentId) => {},
+
+    endAppointment: async (appointmentId, feedback, notes) => {}
+
+     updateAppointmentStatus: async (appointmentId, status) => {}
 }))
