@@ -1,9 +1,10 @@
 "use client"
 
+import { toLocalYMD } from "@/lib/dateUtils"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { useTeacherStore } from "@/store/teacherStore"
 import { useParams, useRouter } from "next/navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 const Page = () => {
   const params = useParams()
@@ -28,6 +29,19 @@ const Page = () => {
     string | null
   >(null)
   const [studentName, setStudentName] = useState<string>("")
+
+  useEffect(() => {
+    if (teacherId) {
+      fetchTeacherById(teacherId)
+    }
+  }, [teacherId, fetchTeacherById])
+
+  useEffect(() => {
+    if (selectedDate && teacherId) {
+      const dateString = toLocalYMD(selectedDate)
+      fetchBookedSlots(teacherId, dateString)
+    }
+  }, [selectedDate, teacherId, fetchBookedSlots])
 
   return <div>Page</div>
 }
