@@ -1,6 +1,6 @@
 "use client"
 
-import { minutesToTime, toLocalYMD } from "@/lib/dateUtils"
+import { convertTo24Hour, minutesToTime, toLocalYMD } from "@/lib/dateUtils"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { useTeacherStore } from "@/store/teacherStore"
 import { useParams, useRouter } from "next/navigation"
@@ -109,6 +109,62 @@ const Page = () => {
   const timeToMinutes = (timeStr: string): number => {
     const [hours, minutes] = timeStr.split(":").map(Number)
     return hours * 60 + minutes
+  }
+
+  const handleBooking = async () => {
+    if (!selectedDate || !selectedSlot || !subject.trim()) {
+      alert("please complete all required fields")
+      return
+    }
+
+    setIsPaymentProcessing(true)
+
+    try {
+      const dateString = toLocalYMD(selectedDate)
+      const slotStart = new Date(
+        `${dateString}T${convertTo24Hour(selectedSlot)}`,
+      )
+      const slotEnd = new Date(
+        slotStart.getTime() +
+          (currentTeacher!.slotDurationMinutes || 30) * 60000,
+      )
+
+      const appointmentFees = getAppointmentPrice()
+      const platformFees = Math.round(appointmentFees * 0.1)
+      const totalAmount = appointmentFees + platformFees
+
+      const appointment = await bookAppointment({
+        teacherId: teacherId,
+        slotStartIso: slotStart.toISOString(),
+        slotEndIso: slotEnd.toISOString(),
+        appointmentType,
+        subject,
+        date: dateString,
+        appointmentFees,
+        platformFees,
+        totalAmount,
+      })
+
+      //store appointemnt Id and student name for payment
+      if (appointment && appointment?._id) {
+        setCreatedAppointmentId(appointment._id)
+
+        setStudentName(appointment.studentId.name || "Student")
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+
+        router.push("/student/dashboard")
+      }
+    } catch (error: any) {
+      console.error(error)
+      setIsPaymentProcessing(false)
+    }
+  }
+
+  const getAppointmentPrice = (): number => {
+    const basePrice = currentTeacher?.hourlyRate || 0
+    const typePrice = appointmentType === "Voice Call" ? -100 : 0
+    return Math.max(0, basePrice + typePrice)
   }
 
   return <div>Page</div>
