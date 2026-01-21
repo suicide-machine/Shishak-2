@@ -1,4 +1,4 @@
-import { getWithAuth } from "@/service/httpService"
+import { getWithAuth, postWithAuth, putWithAuth } from "@/service/httpService"
 import { create } from "zustand"
 
 export interface Appointment {
@@ -150,13 +150,119 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     }
   },
 
-  fetchBookedSlots: async (teacherId, date) => {},
+  fetchBookedSlots: async (teacherId, date) => {
+    set({ loading: true, error: null })
 
-  bookAppointment: async (data) => {},
+    try {
+      const response = await getWithAuth(
+        `/appointment/booked-slots/${teacherId}/${date}`,
+      )
+      set({ bookedSlots: response?.data })
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
 
-    joinAppointment: async (appointmentId) => {},
+  bookAppointment: async (data) => {
+    set({ loading: true, error: null })
 
-    endAppointment: async (appointmentId, feedback, notes) => {}
+    try {
+      const response = await postWithAuth("/appointment/book", data)
 
-     updateAppointmentStatus: async (appointmentId, status) => {}
+      set((state) => ({
+        appointments: [response.data, ...state.appointments],
+      }))
+
+      return response.data
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
+
+  joinAppointment: async (appointmentId) => {
+    set({ loading: true, error: null })
+
+    try {
+      const response = await getWithAuth(`/appointment/join/${appointmentId}`)
+
+      set((state) => ({
+        appointments: state.appointments.map((apt) =>
+          apt._id === appointmentId
+            ? { ...apt, staus: "In Progress" as const }
+            : apt,
+        ),
+
+        currentAppointment:
+          state.currentAppointment?._id === appointmentId
+            ? { ...state.currentAppointment, status: "In Progress" as const }
+            : state.currentAppointment,
+      }))
+
+      return response.data
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
+
+  endAppointment: async (appointmentId, feedback, notes) => {
+    set({ loading: true, error: null })
+
+    try {
+      const response = await putWithAuth(`/appointment/end/${appointmentId}`, {
+        feedback,
+        notes,
+      })
+
+      set((state) => ({
+        appointments: state.appointments.map((apt) =>
+          apt._id === appointmentId
+            ? { ...apt, staus: "Completed" as const }
+            : apt,
+        ),
+        currentAppointment:
+          state.currentAppointment?._id === appointmentId
+            ? { ...state.currentAppointment, status: "Completed" as const }
+            : state.currentAppointment,
+      }))
+
+      return response.data
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
+
+  updateAppointmentStatus: async (appointmentId, status) => {
+    set({ loading: true, error: null })
+
+    try {
+      const response = await putWithAuth(
+        `/appointment/status/${appointmentId}`,
+        { status },
+      )
+
+      set((state) => ({
+        appointments: state.appointments.map((apt) =>
+          apt._id === appointmentId ? { ...apt, staus: status as any } : apt,
+        ),
+        currentAppointment:
+          state.currentAppointment?._id === appointmentId
+            ? { ...state.currentAppointment, status: status as any }
+            : state.currentAppointment,
+      }))
+
+      return response.data
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
 }))
