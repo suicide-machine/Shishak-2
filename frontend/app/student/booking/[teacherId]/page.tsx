@@ -1,6 +1,6 @@
 "use client"
 
-import { toLocalYMD } from "@/lib/dateUtils"
+import { minutesToTime, toLocalYMD } from "@/lib/dateUtils"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { useTeacherStore } from "@/store/teacherStore"
 import { useParams, useRouter } from "next/navigation"
@@ -75,6 +75,41 @@ const Page = () => {
       setAvailableDates(dates)
     }
   }, [currentTeacher])
+
+  //Generate avaiable slots
+  useEffect(() => {
+    if (selectedDate && currentTeacher?.dailyTimeRanges) {
+      const slots: string[] = []
+      //Empty list to hold avaiable dates
+
+      const slotDuration = currentTeacher?.slotDurationMinutes || 30
+
+      currentTeacher.dailyTimeRanges.forEach((timeRange: any) => {
+        const startMintues = timeToMinutes(timeRange.start)
+        //Convert start time (e.g, "12:00") => total mintues (e.g., 540)
+
+        const endMintues = timeToMinutes(timeRange.end)
+        //Convert end time (e.g, "3:00") => total mintues (e.g., 740)
+
+        for (
+          let minutes = startMintues;
+          minutes < endMintues;
+          minutes += slotDuration
+        ) {
+          slots.push(minutesToTime(minutes))
+
+          //Convert mintues back to HH:MM format and add to slots
+        }
+      })
+
+      setAvailableSlots(slots)
+    }
+  }, [selectedDate, currentTeacher])
+
+  const timeToMinutes = (timeStr: string): number => {
+    const [hours, minutes] = timeStr.split(":").map(Number)
+    return hours * 60 + minutes
+  }
 
   return <div>Page</div>
 }
