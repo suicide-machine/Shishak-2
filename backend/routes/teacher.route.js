@@ -90,13 +90,13 @@ router.get(
 
       res.serverError("Doctor fetched failed", [error.message])
     }
-  }
+  },
 )
 
 //Get the profile of teacher
 router.get("/me", authenticate, requireRole("teacher"), async (req, res) => {
   const teacher = await Teacher.findById(req.user._id).select(
-    "-password -googleId"
+    "-password -googleId",
   )
 
   res.ok(teacher, "Profile fetched")
@@ -141,7 +141,24 @@ router.put(
     } catch (error) {
       res.serverError("updated failed", [error.message])
     }
-  }
+  },
 )
+
+router.get("/:teacherId", validate, async (req, res) => {
+  try {
+    const { teacherId } = req.params
+    const teacher = await Teacher.findById(teacherId)
+      .select("-password -googleId")
+      .lean()
+
+    if (!teacher) {
+      return res.notFound("Teacher not found")
+    }
+
+    res.ok(teacher, "teacher details fetched successfully")
+  } catch (error) {
+    res.serverError("Fetching teacher failed", [error.message])
+  }
+})
 
 module.exports = router

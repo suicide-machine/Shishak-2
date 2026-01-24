@@ -6,7 +6,7 @@ import { useTeacherStore } from "@/store/teacherStore"
 import { useParams, useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
-const Page = () => {
+const page = () => {
   const params = useParams()
   const router = useRouter()
   const teacherId = params.teacherId as string
@@ -183,4 +183,4 @@ const Page = () => {
   return <div>Page</div>
 }
 
-export default Page
+export default page
