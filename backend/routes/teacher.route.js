@@ -161,4 +161,120 @@ router.get("/:teacherId", validate, async (req, res) => {
   }
 })
 
+//teacher dashboard
+router.get(
+  "/dashboard",
+  authenticate,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const teacherId = req.auth.id
+      const now = new Date()
+
+      //Proper date range calculation
+      const startOfDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+        0,
+      )
+
+      const endOfDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        23,
+        59,
+        59,
+        999,
+      )
+
+      const teacher = await Teacher.findById(teacherId)
+        .select("-password -googleId")
+        .lean()
+
+      if (!teacher) {
+        return res.notFound("teacher not found")
+      }
+
+      //Today's appointment with full population
+      const todayAppointments = await Appointment.find({
+        teacherId,
+        slotStartIso: { $gte: startOfDay, $lte: endOfDay },
+        status: { $ne: "Cancelled" },
+      })
+        .populate("studentId", "name profileImage age email phone")
+        .populate("teacherId", "name hourlyRate profileImage subject")
+        .sort({ slotStartIso: 1 })
+
+      //upcoming appointment with full population
+      const upcomingAppointments = await Appointment.find({
+        teacherId,
+        slotStartIso: { $gt: endOfDay },
+        status: { $ne: "Cancelled" },
+      })
+        .populate("studentId", "name profileImage age email phone")
+        .populate("teacherId", "name hourlyRate profileImage subject")
+        .sort({ slotStartIso: 1 })
+        .limit(5)
+
+      const uniqueStudentIds = await Appointment.distinct("studentId", {
+        teacherId,
+      })
+
+      const totalStudents = uniqueStudentIds.length
+
+      const completedAppointmentCount = await Appointment.countDocuments({
+        teacherId,
+        status: "Completed",
+      })
+
+      const totalAppointment = await Appointment.find({
+        teacherId,
+        status: "Completed",
+      })
+
+      const totalRevenue = totalAppointment.reduce(
+        (sum, apt) => sum + (apt.fees || teacher.hourlyRate || 0),
+        0,
+      )
+
+      const dashboardData = {
+        user: {
+          name: teacher.name,
+          hourlyRate: teacher.hourlyRate,
+          profileImage: teacher.profileImage,
+          subject: teacher.subject,
+          locationInfo: teacher.locationInfo,
+        },
+
+        stats: {
+          totalStudents,
+          todayAppointments: todayAppointments.length,
+          totalRevenue,
+          completedAppointments: completedAppointmentCount,
+          averageRating: 4.8,
+        },
+
+        todayAppointments,
+        upcomingAppointments,
+
+        performance: {
+          studentSatisfaction: 4.8,
+          completionRate: 98,
+          responseTime: "< 2min",
+        },
+      }
+
+      res.ok(dashboardData, "Dashboard data retrived")
+    } catch (error) {
+      console.error("Dashboard error", error)
+      res.serverError("failed to fetch teacher dashboard", [error.message])
+    }
+  },
+)
+
 module.exports = router
