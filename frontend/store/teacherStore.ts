@@ -53,7 +53,7 @@ export const useTeacherStore = create<TeacherState>((set, get) => ({
       })
 
       const response = await getWithAuth(
-        `/teacher/list?${queryParams.toString()}`
+        `/teacher/list?${queryParams.toString()}`,
       )
 
       set({
@@ -85,5 +85,15 @@ export const useTeacherStore = create<TeacherState>((set, get) => ({
     }
   },
 
-  fetchDashboard: async () => {},
+  fetchDashboard: async () => {
+    set({ loading: true, error: null })
+    try {
+      const response = await getWithAuth("/teacher/dashboard")
+      set({ dashboard: response.data })
+    } catch (error: any) {
+      set({ error: error.message })
+    } finally {
+      set({ loading: false, error: null })
+    }
+  },
 }))
