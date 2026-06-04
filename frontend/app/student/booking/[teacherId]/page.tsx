@@ -1,6 +1,8 @@
 "use client"
 
+import TeacherProfile from "@/components/bookingSteps/TeacherProfile"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { convertTo24Hour, minutesToTime, toLocalYMD } from "@/lib/dateUtils"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { useTeacherStore } from "@/store/teacherStore"
@@ -8,6 +10,10 @@ import { ArrowLeft, Check } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import CalendarStep from "@/components/bookingSteps/CalendarStep"
+import ConsultationStep from "@/components/bookingSteps/ConsultationStep"
+import PaymentStep from "@/components/bookingSteps/PaymentStep"
 
 const page = () => {
   const params = useParams()
@@ -260,6 +266,76 @@ const page = () => {
                 </React.Fragment>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
+            <TeacherProfile teacher={currentTeacher} />
+          </div>
+
+          <div className="lg:col-span-2">
+            <Card className="shadow-lg border-0">
+              <CardContent className="p-8">
+                <AnimatePresence mode="wait">
+                  {currentStep === 1 && (
+                    <motion.div
+                      key="step1"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <CalendarStep
+                      // selectedDate={selectedDate}
+                      // setSelectedDate={setSelectedDate}
+                      // selectedSlot={selectedSlot}
+                      // setSelectedSlot={setSelectedSlot}
+                      // availableSlots={availableSlots}
+                      // availableDates={availableDates}
+                      // excludedWeekdays={
+                      //   currentTeacher?.availabilityRange?.excludedWeekdays ||
+                      //   []
+                      // }
+                      // bookedSlots={bookedSlots}
+                      // onContinue={() => setCurrentStep(2)}
+                      />
+                    </motion.div>
+                  )}
+
+                  {currentStep === 2 && (
+                    <motion.div
+                      key="step2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <ConsultationStep
+                      // appointmentType={appointmentType}
+                      // setAppointmentType={setAppointmentType}
+                      // setSubject={setSubject}
+                      // symptoms={subject}
+                      // appointmentFees={currentTeacher?.hourlyRate}
+                      // onBack={() => setCurrentStep(1)}
+                      // onContinue={() => setCurrentStep(3)}
+                      />
+                    </motion.div>
+                  )}
+
+                  {currentStep === 3 && (
+                    <motion.div
+                      key="step3"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <PaymentStep />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
