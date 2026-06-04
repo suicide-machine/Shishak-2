@@ -1,8 +1,11 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import { convertTo24Hour, minutesToTime, toLocalYMD } from "@/lib/dateUtils"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { useTeacherStore } from "@/store/teacherStore"
+import { ArrowLeft, Check } from "lucide-react"
+import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
@@ -180,7 +183,88 @@ const page = () => {
 
   console.log("this is my current teacher", currentTeacher)
 
-  return <div>Page</div>
+  return (
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100">
+      <div className="bg-white border-b border-gray-200 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link href="/teacher-list">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Teachers
+                </Button>
+              </Link>
+
+              <div className="h-6 w-px bg-gray-300" />
+
+              <div>
+                <h1 className="text-lg md:text-2xl font-bold text-gray-900">
+                  Book Appointment
+                </h1>
+                <p className="text-sm md:text-base text-gray-600">
+                  with {currentTeacher.name}
+                </p>
+              </div>
+            </div>
+
+            {/* Process Indicator */}
+            <div className="hidden md:flex items-center space-x-4">
+              {[1, 2, 3].map((step) => (
+                <React.Fragment key={step}>
+                  <div
+                    className={`flex items-center space-x-2 transition-colors duration-200 ${
+                      currentStep >= step ? "text-blue-600" : "text-gray-400"
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                        currentStep >= step
+                          ? "bg-blue-600 border-blue-600 shadow-md"
+                          : "bg-white border-gray-300"
+                      }`}
+                    >
+                      {currentStep > step ? (
+                        <Check className="w-4 h-4 text-white" />
+                      ) : (
+                        <span
+                          className={`text-sm font-semibold ${
+                            currentStep >= step ? "text-white" : "text-gray-500"
+                          }`}
+                        >
+                          {step}
+                        </span>
+                      )}
+                    </div>
+
+                    <span className="text-sm font-medium">
+                      {step === 1
+                        ? "Select Time"
+                        : step === 2
+                          ? "Details"
+                          : "Payment"}
+                    </span>
+                  </div>
+
+                  {step < 3 && (
+                    <div
+                      className={`w-12 h-px transition-colors duration-200 ${
+                        currentStep > step ? "bg-blue-600" : "bg-gray-300"
+                      }`}
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default page
