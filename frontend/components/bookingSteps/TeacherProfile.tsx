@@ -2,7 +2,7 @@ import { Teacher } from "@/lib/types"
 import React from "react"
 import { Card, CardContent } from "../ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Award, Star } from "lucide-react"
+import { Award, Heart, MapPin, Star } from "lucide-react"
 import { Badge } from "../ui/badge"
 
 interface TeacherPrfileInterface {
@@ -20,7 +20,7 @@ const TeacherProfile = ({ teacher }: TeacherPrfileInterface) => {
               alt={teacher?.name}
             ></AvatarImage>
 
-            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-2xl font-bold shadow-inner">
+            <AvatarFallback className="bg-linear-to-br from-blue-500 to-blue-600 text-white text-2xl font-bold shadow-inner">
               {teacher?.name?.charAt(0)?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -78,6 +78,52 @@ const TeacherProfile = ({ teacher }: TeacherPrfileInterface) => {
                 {cat}
               </Badge>
             ))}
+          </div>
+        </div>
+
+        <div className="space-x-4 flex flex-col  flex-wrap items-stretch sm:space-x-0 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg flex-1 min-w-0 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300">
+            <h3 className="font-semibold text-gray-900 mb-2 tracking-tight">
+              About
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {teacher.about}
+            </p>
+          </div>
+
+          {teacher.locationInfo && (
+            <div className="bf-gray-50 p-4 rounded-lg flex-1 min-w-0 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 bg-gray-50">
+              <h3 className="font-semibold text-gray-900 mb-2 tracking-tight">
+                Location:
+              </h3>
+              <div className="text-sm text-gray-600">
+                <p className="font-medium">{teacher.locationInfo.name}</p>
+                <p className="leading-relaxed">
+                  {teacher.locationInfo.address}
+                </p>
+                <div className="flex items-center space-x-1 mt-1">
+                  <MapPin className="w-3 h-3 text-gray-500" />
+                  <span className="text-gray-600">
+                    {teacher.locationInfo.city}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between p-4 bg-linear-to-br from-green-50 to-green-100 rounded-lg flex-1 min-w-0 shadow-sm border border-green-200 hover:shadow-lg transition-shadow duration-300">
+            <div>
+              <p className="text-sm text-green-700 font-medium">Tution Fee</p>
+              <p className="text-2xl text-green-800 font-bold">
+                ₹{teacher.hourlyRate}
+              </p>
+              <p className="text-xs text-green-600 font-medium">
+                {teacher.slotDurationMinutes} minutes class
+              </p>
+            </div>
+            <div className="text-green-600">
+              <Heart className="w-8 h-8 cursor-pointer transition-all hover:scale-110 text-green-600 hover:text-red-400" />
+            </div>
           </div>
         </div>
       </CardContent>
