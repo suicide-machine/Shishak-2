@@ -288,18 +288,18 @@ const page = () => {
                       exit={{ opacity: 0, x: -20 }}
                     >
                       <CalendarStep
-                      // selectedDate={selectedDate}
-                      // setSelectedDate={setSelectedDate}
-                      // selectedSlot={selectedSlot}
-                      // setSelectedSlot={setSelectedSlot}
-                      // availableSlots={availableSlots}
-                      // availableDates={availableDates}
-                      // excludedWeekdays={
-                      //   currentTeacher?.availabilityRange?.excludedWeekdays ||
-                      //   []
-                      // }
-                      // bookedSlots={bookedSlots}
-                      // onContinue={() => setCurrentStep(2)}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                        selectedSlot={selectedSlot}
+                        setSelectedSlot={setSelectedSlot}
+                        availableSlots={availableSlots}
+                        availableDates={availableDates}
+                        excludedWeekdays={
+                          currentTeacher?.availabilityRange?.excludedWeekdays ||
+                          []
+                        }
+                        bookedSlots={bookedSlots}
+                        onContinue={() => setCurrentStep(2)}
                       />
                     </motion.div>
                   )}
