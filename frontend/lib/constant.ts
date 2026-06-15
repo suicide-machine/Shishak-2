@@ -308,29 +308,22 @@ export const cities = [
 //   },
 // ]
 
-// export const sessionTypes = [
-//   {
-//     type: "Video Lesson",
-//     icon: Video,
-//     description: "Interactive video session with screen sharing",
-//     price: 0,
-//     recommended: true,
-//   },
-//   {
-//     type: "Audio Session",
-//     icon: Phone,
-//     description: "Voice-only session for quick questions",
-//     price: -40,
-//     recommended: false,
-//   },
-//   {
-//     type: "Chat Support",
-//     icon: FileText,
-//     description: "Text-based help with homework questions",
-//     price: -60,
-//     recommended: false,
-//   },
-// ]
+export const appointmentTypes = [
+  {
+    type: "Video Consultation",
+    icon: Video,
+    description: "Face-to-face consultation via HD video call",
+    price: 0,
+    recommended: true,
+  },
+  {
+    type: "Voice Call",
+    icon: Phone,
+    description: "Audio-only consultation via voice call",
+    price: -100,
+    recommended: false,
+  },
+]
 
 // export const emptyStates = {
 //   upcoming: {

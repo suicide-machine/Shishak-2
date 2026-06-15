@@ -312,13 +312,13 @@ const page = () => {
                       exit={{ opacity: 0, x: -20 }}
                     >
                       <ConsultationStep
-                      // appointmentType={appointmentType}
-                      // setAppointmentType={setAppointmentType}
-                      // setSubject={setSubject}
-                      // symptoms={subject}
-                      // appointmentFees={currentTeacher?.hourlyRate}
-                      // onBack={() => setCurrentStep(1)}
-                      // onContinue={() => setCurrentStep(3)}
+                        appointmentType={appointmentType}
+                        setAppointmentType={setAppointmentType}
+                        setSubject={setSubject}
+                        subject={subject}
+                        appointmentFees={currentTeacher?.hourlyRate}
+                        onBack={() => setCurrentStep(1)}
+                        onContinue={() => setCurrentStep(3)}
                       />
                     </motion.div>
                   )}
