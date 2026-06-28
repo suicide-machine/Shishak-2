@@ -334,7 +334,21 @@ const page = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                     >
-                      <PaymentStep />
+                      <PaymentStep
+                        selectedDate={selectedDate}
+                        selectedSlot={selectedSlot}
+                        appointmentType={appointmentType}
+                        teacherName={currentTeacher.name}
+                        slotDuration={currentTeacher.slotDurationMinutes}
+                        appointmentFee={getAppointmentPrice()}
+                        isProcessing={isPaymentProcessing}
+                        onBack={() => setCurrentStep(2)}
+                        onConfirm={handleBooking}
+                        onPaymentSuccess={handlePaymentSuccess}
+                        loading={loading}
+                        appointmentId={createdAppointmentId || undefined}
+                        studentName={studentName || undefined}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
