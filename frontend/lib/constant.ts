@@ -310,7 +310,7 @@ export const cities = [
 
 export const appointmentTypes = [
   {
-    type: "Video Consultation",
+    type: "Video Appointment",
     icon: Video,
     description: "Face-to-face consultation via HD video call",
     price: 0,

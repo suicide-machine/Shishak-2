@@ -146,7 +146,7 @@ router.post(
       } = req.body
 
       const confictingAppointment = await Appointment.findOne({
-        doctorId,
+        teacherId,
         status: { $in: ["Scheduled", "In Progress"] },
         $or: [
           {
