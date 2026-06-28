@@ -69,6 +69,27 @@ const PaymentStep = ({
     }
   }, [appointmentId, studentName])
 
+  useEffect(() => {
+    if (
+      appointmentId &&
+      studentName &&
+      paymentStatus === "idle" &&
+      !isPaymentLoading &&
+      shouldAutoOpen
+    ) {
+      const timer = setTimeout(() => {
+        handlePayment()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [
+    appointmentId,
+    studentName,
+    paymentStatus,
+    isPaymentLoading,
+    shouldAutoOpen,
+  ])
+
   const handlePayment = async () => {
     if (!appointmentId || !studentName) {
       onConfirm()
