@@ -1,5 +1,5 @@
 import { Appointment } from "@/store/appointmentStore"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt"
 
 interface AppointmentCallInterface {
@@ -165,7 +165,59 @@ const AppointmentCall = ({
       onCallEnd,
     ],
   )
-  return <div>AppointmentCall</div>
+
+  useEffect(() => {
+    if (
+      containerRef.current &&
+      !initializationRef.current &&
+      currentUser.id &&
+      currentUser.name &&
+      isComponentMountedRef.current
+    ) {
+      intializeCall(containerRef.current)
+    }
+
+    return () => {
+      if (zpRef.current) {
+        try {
+          zpRef.current.destroy()
+        } catch (error) {
+          console.warn("Error during cleaup", error)
+        } finally {
+          zpRef.current = null
+        }
+      }
+    }
+  }, [currentUser.id, currentUser.name, intializeCall])
+
+  const isVideoCall = appointment.appointmentType === "Video Appointment"
+
+  return (
+    <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+      <div className="bg-white border-b p-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">
+            {isVideoCall ? "Video Appointment" : "Voice Appointment"}
+          </h1>
+
+          <p className="text-sm text-gray-600">
+            {currentUser.role === "teacher"
+              ? `Student: ${appointment.studentId.name}`
+              : `Dr: ${appointment.teacherId.name}`}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex-1">
+        <div
+          ref={containerRef}
+          id="appointment-call-container"
+          className="w-full h-full bg-gray-900"
+          style={{ height: "100%" }}
+        ></div>
+      </div>
+    </div>
+  )
 }
 
 export default AppointmentCall
