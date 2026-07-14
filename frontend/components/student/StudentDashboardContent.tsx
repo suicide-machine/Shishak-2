@@ -7,8 +7,20 @@ import { Appointment, useAppointmentStore } from "@/store/appointmentStore"
 import { Card, CardContent } from "../ui/card"
 import Link from "next/link"
 import { Button } from "../ui/button"
-import { Calendar, Clock, FileText } from "lucide-react"
+import {
+  Calendar,
+  Clock,
+  FileText,
+  MapPin,
+  Phone,
+  Star,
+  Video,
+} from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { Badge } from "../ui/badge"
+import { getStatusColor } from "@/lib/constant"
+import FeedbackViewModal from "../teacher/FeedbackViewModal"
 
 const StudentDashboardContent = () => {
   const { user } = userAuthStore()
@@ -91,8 +103,132 @@ const StudentDashboardContent = () => {
   }
 
   const AppointmentCard = ({ appointment }: { appointment: Appointment }) => (
-    <Card>
-      <CardContent></CardContent>
+    <Card className="hover:shadow-lg transition-shadow">
+      <CardContent className="p-6">
+        <div className="flex flex-col items-center md:flex-row md:items-start md:space-x-6">
+          <div className="shrink-0 flex justify-center md:justify-start">
+            <Avatar className="w-20 h-20">
+              <AvatarImage
+                src={appointment.teacherId?.profileImage}
+                alt={appointment.teacherId?.name}
+              />
+
+              <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">
+                {appointment.teacherId?.name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+
+          <div className="mt-4 md:mt-0 flex-1 w-full text-center md:text-left">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start">
+              <div>
+                <h3 className="text-lg font-semiboldtext-gray-900">
+                  {appointment.teacherId?.name}
+                </h3>
+
+                <p className="text-gray-600">
+                  {appointment.teacherId?.subject}
+                </p>
+
+                <div className="flex items-center justify-center md:justify-start space-x-1 text-sm text-gray-500 mt-1">
+                  <MapPin className="w-3 h-3" />
+                  <span>{appointment.teacherId?.locationInfo?.name}</span>
+                </div>
+              </div>
+
+              <div className="mt-2 md:mt-0 text-center md:text-right">
+                <Badge className={getStatusColor(appointment.status)}>
+                  {appointment.status}
+                </Badge>
+
+                {isToday(appointment.slotStartIso) && (
+                  <div className="text-xs text-blue-600 font-semibold mt-1">
+                    TODAY
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-center md:justify-start space-x-2 text-sm text-gray-600">
+                  <Calendar className="w-4 h-4" />
+                  <span>{formatDate(appointment.slotStartIso)}</span>
+                </div>
+
+                <div className="flex items-center justify-center md:justify-start space-x-2 text-sm text-gray-600">
+                  {appointment.appointmentType === "Video Appointment" ? (
+                    <Video className="w-4 h-4" />
+                  ) : (
+                    <Phone className="w-4 h-4" />
+                  )}
+
+                  <span>{appointment.appointmentType}</span>
+                </div>
+              </div>
+
+              <div className="text-center md:text-left">
+                <div className="flex justify-center gap-2 text-sm text-gray-600">
+                  <span className="font-semibold">Fee:</span>
+
+                  <p>₹{appointment.teacherId?.hourlyRate}</p>
+                </div>
+
+                {appointment.subject && (
+                  <div className="flex justify-center gap-2 text-sm text-gray-600 mt-1">
+                    <span className="font-semibold">Subjects: </span>
+
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                      {appointment.subject}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col md:flex-row items-center md:justify-between space-y-3 md:space-y-0">
+              <div className="flex space-x-2">
+                {canJoinCall(appointment) && (
+                  <Link href={`/call/${appointment._id}`}>
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <Video className="w-4 h-4 mr-2" />
+                      Join Call
+                    </Button>
+                  </Link>
+                )}
+
+                {appointment.status === "Completed" && appointment.feedback && (
+                  <FeedbackViewModal
+                    appointment={appointment}
+                    userType="student"
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-green-700 border-green-200 hover:bg-green-50"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        View Feedback
+                      </Button>
+                    }
+                  />
+                )}
+              </div>
+
+              {appointment.status === "Completed" && (
+                <div className="flex items-center space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   )
 
