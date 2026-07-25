@@ -25,6 +25,8 @@ router.get(
       const { status } = req.query
       const filter = { teacherId: req.auth.id }
 
+      console.log(filter)
+
       if (status) {
         const statusArray = Array.isArray(status) ? status : [status]
         filter.status = { $in: statusArray }
@@ -202,7 +204,7 @@ router.post(
 //Get single appointment by id
 router.get("/:id", authenticate, async (req, res) => {
   try {
-    const appointment = await Appointment.find(filter)
+    const appointment = await Appointment.findById(req.params.id)
       .populate(
         "teacherId",
         "name hourlyRate phone subject locationInfo profileImage",

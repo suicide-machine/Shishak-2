@@ -4,7 +4,7 @@ import AppointmentCall from "@/components/call/AppointmentCall"
 import { useAppointmentStore } from "@/store/appointmentStore"
 import { userAuthStore } from "@/store/authStore"
 import { useParams } from "next/navigation"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useState } from "react"
 
 const page = () => {

@@ -193,7 +193,7 @@ const AppointmentCall = ({
   const isVideoCall = appointment.appointmentType === "Video Appointment"
 
   return (
-    <div className="h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+    <div className="h-screen w-full bg-linear-to-br from-blue-50 to-indigo-100 flex flex-col">
       <div className="bg-white border-b p-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">
