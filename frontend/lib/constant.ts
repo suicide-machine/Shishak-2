@@ -325,26 +325,26 @@ export const appointmentTypes = [
   },
 ]
 
-// export const emptyStates = {
-//   upcoming: {
-//     icon: Calendar,
-//     title: "No Upcoming Sessions",
-//     description: "You have no scheduled tutoring sessions.",
-//     action: "Find a Tutor",
-//   },
-//   completed: {
-//     icon: GraduationCap,
-//     title: "No Completed Sessions",
-//     description: "Your completed learning sessions will appear here.",
-//     action: "Book Your First Session",
-//   },
-//   tutors: {
-//     icon: Users,
-//     title: "No Tutors Found",
-//     description: "Try adjusting your filters or search criteria.",
-//     action: "Browse All Tutors",
-//   },
-// }
+export const emptyStates = {
+  upcoming: {
+    icon: Calendar,
+    title: "No Upcoming Sessions",
+    description: "You have no scheduled tutoring sessions.",
+    action: "Find a Tutor",
+  },
+  completed: {
+    icon: GraduationCap,
+    title: "No Completed Sessions",
+    description: "Your completed learning sessions will appear here.",
+    action: "Book Your First Session",
+  },
+  tutors: {
+    icon: Users,
+    title: "No Tutors Found",
+    description: "Try adjusting your filters or search criteria.",
+    action: "Browse All Tutors",
+  },
+}
 
 export const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
