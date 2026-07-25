@@ -11,6 +11,7 @@ import {
   Phone,
   Star,
   Video,
+  XCircle,
 } from "lucide-react"
 import { Badge } from "../ui/badge"
 import { emptyStates, getStatusColor } from "@/lib/constant"
@@ -97,8 +98,30 @@ const TeacherAppointmentContent = () => {
     )
   }
 
+  const canMarkCancelled = (appointment: any) => {
+    const appointmentTime = new Date(appointment.slotStartIso)
+    const now = new Date()
+
+    return appointment.status === "Scheduled" && now > appointmentTime
+  }
+
   if (!user) {
     return null
+  }
+
+  const handleMarkCancelled = async (appointmentId: string) => {
+    if (
+      confirm("Are you sure you want to mark this appointment as cancelled")
+    ) {
+      try {
+        await updateAppointmentStatus(appointmentId, "Cancelled")
+        if (user?.type === "teacher") {
+          fetchAppointments("teacher", activeTab)
+        }
+      } catch (error) {
+        console.error("Failed to mark cancel appointment", error)
+      }
+    }
   }
 
   const AppointmentCard = ({ appointment }: { appointment: Appointment }) => (
@@ -196,6 +219,20 @@ const TeacherAppointmentContent = () => {
                     </Button>
                   </Link>
                 )}
+
+                <div>
+                  {canMarkCancelled(appointment) && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleMarkCancelled(appointment._id)}
+                    >
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Mark Cancelled
+                    </Button>
+                  )}
+                </div>
 
                 {appointment.status === "Completed" && appointment.feedback && (
                   <FeedbackViewModal
