@@ -6,8 +6,9 @@ import { userAuthStore } from "@/store/authStore"
 import { useTeacherStore } from "@/store/teacherStore"
 import { Activity, useEffect, useState } from "react"
 import { useAppointmentStore } from "@/store/appointmentStore"
-import { Calendar, DollarSign, Users } from "lucide-react"
+import { Calendar, DollarSign, MapPin, Star, Users } from "lucide-react"
 import FeedbackModal from "./FeedbackModal"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 const TeacherDashboardContent = () => {
   const searchParams = useSearchParams()
@@ -164,6 +165,57 @@ const TeacherDashboardContent = () => {
   return (
     <>
       <Header showDashboardNav={true} />
+
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-indigo-50 pt-16">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 ">
+                <Avatar className="w-20 h-20 ring-4 ring-blue-100">
+                  <AvatarImage
+                    src={dashboardData?.user?.profileImage}
+                    alt={dashboardData?.user?.name}
+                  />
+
+                  <AvatarFallback>
+                    {dashboardData?.user?.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div>
+                  <h1 className="text-md md:text-3xl font-bold text-gray-900">
+                    Hi, {dashboardData?.user?.name}
+                  </h1>
+
+                  <p className="text-gray-600 text-xs md:text-lg">
+                    {dashboardData?.user?.subject}
+                  </p>
+
+                  <div className="flex items-center space-x-4 mt-2">
+                    <div className="flex items-center space-x-1 text-sm text-gray-500">
+                      <MapPin className="w-4 h-4" />
+
+                      <span>
+                        {dashboardData?.user?.locationInfo?.name},{" "}
+                        {dashboardData?.user?.locationInfo?.city}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-4 h-4 fill-orange-400 text-yellow-400" />
+                      <span className="text-sm font-semibold text-gray-700">
+                        {dashboardData?.stats?.averageRating}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden md:flex items-center space-x-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <FeedbackModal
         isOpen={showFeedbackModal}

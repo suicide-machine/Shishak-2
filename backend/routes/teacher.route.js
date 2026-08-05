@@ -3,6 +3,7 @@ const { query, body } = require("express-validator")
 const Teacher = require("../model/teacher")
 const { authenticate, requireRole } = require("../middleware/auth")
 const validate = require("../middleware/validate")
+const Appointment = require("../model/appointment")
 
 const router = express.Router()
 
@@ -144,23 +145,6 @@ router.put(
   },
 )
 
-router.get("/:teacherId", validate, async (req, res) => {
-  try {
-    const { teacherId } = req.params
-    const teacher = await Teacher.findById(teacherId)
-      .select("-password -googleId")
-      .lean()
-
-    if (!teacher) {
-      return res.notFound("Teacher not found")
-    }
-
-    res.ok(teacher, "teacher details fetched successfully")
-  } catch (error) {
-    res.serverError("Fetching teacher failed", [error.message])
-  }
-})
-
 //teacher dashboard
 router.get(
   "/dashboard",
@@ -168,7 +152,8 @@ router.get(
   requireRole("teacher"),
   async (req, res) => {
     try {
-      const teacherId = req.auth.id
+      // const teacherId = req.auth.id
+      const teacherId = req.user._id
       const now = new Date()
 
       //Proper date range calculation
@@ -276,5 +261,22 @@ router.get(
     }
   },
 )
+
+router.get("/:teacherId", validate, async (req, res) => {
+  try {
+    const { teacherId } = req.params
+    const teacher = await Teacher.findById(teacherId)
+      .select("-password -googleId")
+      .lean()
+
+    if (!teacher) {
+      return res.notFound("Teacher not found")
+    }
+
+    res.ok(teacher, "teacher details fetched successfully")
+  } catch (error) {
+    res.serverError("Fetching teacher failed", [error.message])
+  }
+})
 
 module.exports = router
