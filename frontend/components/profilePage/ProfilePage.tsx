@@ -21,6 +21,15 @@ import Header from "../landing/Header"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Card, CardContent } from "../ui/card"
 import { Button } from "../ui/button"
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { Textarea } from "../ui/textarea"
 
 interface ProfileProps {
   userType: "teacher" | "student"
@@ -250,12 +259,111 @@ const ProfilePage = ({ userType }: ProfileProps) => {
           />
         </div>
       </div>
+
+      {userType === "student" && (
+        <>
+          <div className="flex flex-col gap-2">
+            <Label>Official date of birth</Label>
+
+            <Input
+              type="date"
+              value={
+                formData.dob
+                  ? new Date(formData.dob).toISOString().split("T")[0]
+                  : ""
+              }
+              onChange={(e) =>
+                handleInputChnage(
+                  "dob",
+                  e.target.value
+                    ? new Date(formData.dob).toISOString().split("T")[0]
+                    : "",
+                )
+              }
+              disabled={!isEditing}
+              className="w-80"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label>Gender</Label>
+
+            <RadioGroup
+              value={formData.gender || ""}
+              onValueChange={(value) => handleInputChnage("gender", value)}
+              disabled={!isEditing}
+              className="flex space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="male" id="male" />
+                <Label htmlFor="male">Male</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="female" id="female" />
+                <Label htmlFor="female">Female</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="other" id="other" />
+                <Label htmlFor="other">Other</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label>Education Level</Label>
+
+            <Select
+              value={formData.educationLevel || ""}
+              onValueChange={(value) =>
+                handleInputChnage("educationLevel", value)
+              }
+              disabled={!isEditing}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Education Level" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {[
+                  "primary",
+                  "secondary",
+                  "high-school",
+                  "college",
+                  "university",
+                ].map((educationLevel) => (
+                  <SelectItem key={educationLevel} value={educationLevel}>
+                    {educationLevel}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
+
+      {userType === "teacher" && (
+        <div>
+          <Label>About</Label>
+
+          <Textarea
+            value={formData.about || ""}
+            onChange={(e) => handleInputChnage("about", e.target.value)}
+            disabled={!isEditing}
+            rows={4}
+          />
+        </div>
+      )}
     </div>
   )
 
   const renderContent = () => {
     switch (activeSection) {
       case "about":
+        return renderAboutSection()
+
+      default:
         return renderAboutSection()
     }
   }
