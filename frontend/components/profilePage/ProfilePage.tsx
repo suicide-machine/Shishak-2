@@ -107,9 +107,11 @@ const ProfilePage = ({ userType }: ProfileProps) => {
           city: user.locationInfo?.city || "",
         },
         academicBackground: {
-          allergies: user.academicBackground?.previousQualifications || "",
-          currentMedications: user.academicBackground?.areasOfDifficulty || "",
-          chronicConditions: user.academicBackground?.specialRequirements || "",
+          previousQualifications:
+            user.academicBackground?.previousQualifications || "",
+          areasOfDifficulty: user.academicBackground?.areasOfDifficulty || "",
+          specialRequirements:
+            user.academicBackground?.specialRequirements || "",
         },
         guardian: {
           name: user.guardian?.name || "",
@@ -694,6 +696,57 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const academicBackground = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <Label>Previous Qualifications</Label>
+
+        <Textarea
+          value={formData.academicBackground.previousQualifications || ""}
+          onChange={(e) =>
+            handleInputChnage(
+              "academicBackground.previousQualifications",
+              e.target.value,
+            )
+          }
+          disabled={!isEditing}
+          rows={3}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Areas Of Difficulty</Label>
+        <Textarea
+          value={formData.academicBackground.areasOfDifficulty || ""}
+          onChange={(e) =>
+            handleInputChnage(
+              "academicBackground.areasOfDifficulty",
+              e.target.value,
+            )
+          }
+          disabled={!isEditing}
+          rows={3}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Special Requirements</Label>
+
+        <Textarea
+          value={formData.academicBackground.specialRequirements || ""}
+          onChange={(e) =>
+            handleInputChnage(
+              "academicBackground.specialRequirements",
+              e.target.value,
+            )
+          }
+          disabled={!isEditing}
+          rows={3}
+        />
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
@@ -710,6 +763,9 @@ const ProfilePage = ({ userType }: ProfileProps) => {
 
       case "contact":
         return renderContactSection()
+
+      case "academic":
+        return academicBackground()
 
       default:
         return renderAboutSection()
