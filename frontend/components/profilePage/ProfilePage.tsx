@@ -674,6 +674,26 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const renderContactSection = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <Label>Phone Number</Label>
+
+        <Input
+          value={formData.phone || ""}
+          onChange={(e) => handleInputChnage("phone", e.target.value)}
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Email</Label>
+
+        <Input value={formData.email || ""} disabled={true} />
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
@@ -687,6 +707,9 @@ const ProfilePage = ({ userType }: ProfileProps) => {
 
       case "availability":
         return renderAvailabilitySection()
+
+      case "contact":
+        return renderContactSection()
 
       default:
         return renderAboutSection()
