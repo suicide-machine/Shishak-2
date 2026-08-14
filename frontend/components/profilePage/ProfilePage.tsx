@@ -1,6 +1,6 @@
 "use client"
 
-import { subjectCategories } from "@/lib/constant"
+import { subjectCategories, subjects } from "@/lib/constant"
 import { userAuthStore } from "@/store/authStore"
 import {
   Award,
@@ -13,6 +13,7 @@ import {
   Phone,
   User,
   Users,
+  X,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Label } from "../ui/label"
@@ -30,6 +31,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Textarea } from "../ui/textarea"
+import { Badge } from "../ui/badge"
 
 interface ProfileProps {
   userType: "teacher" | "student"
@@ -358,10 +360,142 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const renderProfessionalSection = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <Label>Subjects: </Label>
+
+        <Select
+          value={formData.subject || ""}
+          onValueChange={(value) => handleInputChnage("subject", value)}
+          disabled={!isEditing}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select subject" />
+          </SelectTrigger>
+
+          <SelectContent>
+            {subjects.map((spec) => (
+              <SelectItem key={spec} value={spec}>
+                {spec}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Category</Label>
+
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.category?.map((cat: string, index: number) => (
+            <Badge
+              key={index}
+              variant="secondary"
+              className="flex items-center spacex-1"
+            >
+              <span>{cat}</span>
+
+              {isEditing && (
+                <button
+                  type="button"
+                  className="ml-1 p-0 border-0 bg-transparent cursor-pointer hover:bg-gray-200 rounded-full"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleCategoryDelete(index)
+                  }}
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </Badge>
+          ))}
+
+          {isEditing && getAvailableCategories().length > 0 && (
+            <Select
+              onValueChange={(value) => {
+                const selectedCategory = getAvailableCategories().find(
+                  (cate) => cate.id === value,
+                )
+                if (selectedCategory) {
+                  handleCategorySelect(selectedCategory)
+                }
+              }}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Add Category" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {getAvailableCategories().map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className={`w-3 h-3 rounded-full ${category.color}`}
+                      ></div>
+
+                      <span>{category.title}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {isEditing && getAvailableCategories().length === 0 && (
+            <span className="text-sm text-gray-500">
+              All categories have been selected
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Qualification</Label>
+
+        <Input
+          value={formData.qualification || ""}
+          onChange={(e) => handleInputChnage("qualification", e.target.value)}
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Experience (years)</Label>
+
+        <Input
+          type="number"
+          value={formData.experience || ""}
+          onChange={(e) =>
+            handleInputChnage("experience", parseInt(e.target.value) || 0)
+          }
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Hourly Rate(₹)</Label>
+
+        <Input
+          type="number"
+          value={formData.hourlyRate || ""}
+          onChange={(e) =>
+            handleInputChnage("hourlyRate", parseInt(e.target.value) || 0)
+          }
+          disabled={!isEditing}
+        />
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
         return renderAboutSection()
+
+      case "professional":
+        return renderProfessionalSection()
 
       default:
         return renderAboutSection()
