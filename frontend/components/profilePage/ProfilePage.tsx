@@ -11,6 +11,7 @@ import {
   FileText,
   MapPin,
   Phone,
+  Plus,
   User,
   Users,
   X,
@@ -32,6 +33,7 @@ import {
 } from "../ui/select"
 import { Textarea } from "../ui/textarea"
 import { Badge } from "../ui/badge"
+import { Checkbox } from "../ui/checkbox"
 
 interface ProfileProps {
   userType: "teacher" | "student"
@@ -528,6 +530,150 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const renderAvailabilitySection = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <Label>Available From Date</Label>
+
+          <Input
+            type="date"
+            value={formatDateForInput(formData.availabilityRange?.startDate)}
+            onChange={(e) =>
+              handleInputChnage("availabilityRange?.startDate", e.target.value)
+            }
+            disabled={!isEditing}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label>Available Until Date</Label>
+
+          <Input
+            type="date"
+            value={formatDateForInput(formData.availabilityRange?.endDate)}
+            onChange={(e) =>
+              handleInputChnage("availabilityRange?.endDate", e.target.value)
+            }
+            disabled={!isEditing}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Excluded Weekdays</Label>
+
+        <div className="flex flex-wrap gap-2">
+          {[
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ].map((day, index) => (
+            <label key={index} className="flex items-center space-x-2">
+              <Checkbox
+                checked={
+                  formData.availabilityRange?.excludedWeekdays?.includes(
+                    index,
+                  ) || false
+                }
+                onCheckedChange={() => handleWeekdayToggle(index)}
+                disabled={!isEditing}
+              />
+              <span className="text-sm">{day}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Daily Time Range</Label>
+
+        <div className="space-y-3">
+          {formData.dailyTimeRanges?.map((timeRange: any, index: number) => (
+            <div className="flex items-center space-x-2" key={index}>
+              <Input
+                type="time"
+                value={timeRange.start || ""}
+                onChange={(e) =>
+                  handleArrayChnage(
+                    "dailyTimeRanges",
+                    index,
+                    "start",
+                    e.target.value,
+                  )
+                }
+                disabled={!isEditing}
+              />
+
+              <span>to</span>
+
+              <Input
+                type="time"
+                value={timeRange.end || ""}
+                onChange={(e) =>
+                  handleArrayChnage(
+                    "dailyTimeRanges",
+                    index,
+                    "end",
+                    e.target.value,
+                  )
+                }
+                disabled={!isEditing}
+              />
+
+              {isEditing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeTimeRange(index)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+
+          {isEditing && (
+            <Button variant="outline" size="sm" onClick={addTimeRange}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Time Range
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Slot Duration (minutes)</Label>
+
+        <Select
+          value={formData.slotDurationMinutes?.toString() || "30"}
+          onValueChange={(value) =>
+            handleInputChnage("slotDurationMinutes", parseInt(value))
+          }
+          disabled={!isEditing}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select slot duration"></SelectValue>
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="15">15 minutes</SelectItem>
+            <SelectItem value="20">20 minutes</SelectItem>
+            <SelectItem value="30">30 minutes</SelectItem>
+            <SelectItem value="45">45 minutes</SelectItem>
+            <SelectItem value="60">60 minutes</SelectItem>
+            <SelectItem value="90">90 minutes</SelectItem>
+            <SelectItem value="120">120 minutes</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
@@ -538,6 +684,9 @@ const ProfilePage = ({ userType }: ProfileProps) => {
 
       case "location":
         return renderLocationSection()
+
+      case "availability":
+        return renderAvailabilitySection()
 
       default:
         return renderAboutSection()
