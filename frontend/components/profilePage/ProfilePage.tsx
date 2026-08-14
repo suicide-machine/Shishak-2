@@ -747,6 +747,40 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const renderGuardianSection = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <Label>Guardian Name</Label>
+
+        <Input
+          value={formData.guardian?.name || ""}
+          onChange={(e) => handleInputChnage("guardian?.name", e.target.value)}
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>guardian Contact Phone</Label>
+        <Input
+          value={formData.guardian?.phone || ""}
+          onChange={(e) => handleInputChnage("guardian?.phone", e.target.value)}
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Relationship</Label>
+        <Input
+          value={formData.guardian?.relationship || ""}
+          onChange={(e) =>
+            handleInputChnage("guardian?.relationship", e.target.value)
+          }
+          disabled={!isEditing}
+        />
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
@@ -767,10 +801,15 @@ const ProfilePage = ({ userType }: ProfileProps) => {
       case "academic":
         return academicBackground()
 
+      case "guardian":
+        return renderGuardianSection()
+
       default:
         return renderAboutSection()
     }
   }
+
+  if (!user) return <div>Loading...</div>
 
   return (
     <>
