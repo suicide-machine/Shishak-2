@@ -489,6 +489,45 @@ const ProfilePage = ({ userType }: ProfileProps) => {
     </div>
   )
 
+  const renderLocationSection = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <Label>Location: </Label>
+        <Input
+          value={formData.locationInfo?.name || ""}
+          onChange={(e) =>
+            handleInputChnage("locationInfo?.name", e.target.value)
+          }
+          disabled={!isEditing}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Address</Label>
+
+        <Textarea
+          value={formData.locationInfo?.address || ""}
+          onChange={(e) =>
+            handleInputChnage("locationInfo?.address", e.target.value)
+          }
+          disabled={!isEditing}
+          rows={3}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>City</Label>
+        <Input
+          value={formData.locationInfo?.city || ""}
+          onChange={(e) =>
+            handleInputChnage("locationInfo?.city", e.target.value)
+          }
+          disabled={!isEditing}
+        />
+      </div>
+    </div>
+  )
+
   const renderContent = () => {
     switch (activeSection) {
       case "about":
@@ -496,6 +535,9 @@ const ProfilePage = ({ userType }: ProfileProps) => {
 
       case "professional":
         return renderProfessionalSection()
+
+      case "location":
+        return renderLocationSection()
 
       default:
         return renderAboutSection()
