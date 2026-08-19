@@ -2,7 +2,7 @@ export interface User {
   id: string
   name: string
   email: string
-  type: "teacher" | "student"
+  type: "teacher" | "student " | "admin"
   phone?: string
   profileImage?: string
   isVerified: boolean
@@ -48,6 +48,16 @@ export interface User {
     end: string
   }>
   slotDurationMinutes?: number
+
+  // admin
+  role?: string
+
+  permissions?: {
+    userManagement?: boolean
+    teacherManagement?: boolean
+    paymentManagement?: boolean
+    analytics?: boolean
+  }
 }
 
 export interface TimeRange {

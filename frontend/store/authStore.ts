@@ -22,6 +22,7 @@ interface AuthState {
   //Api Actions
   loginTeacher: (email: string, password: string) => Promise<void>
   loginStudent: (email: string, password: string) => Promise<void>
+  loginAdmin: (email: string, password: string) => Promise<void>
   registerTeacher: (data: any) => Promise<void>
   registerStudent: (data: any) => Promise<void>
   fetchProfile: () => Promise<User | null>
@@ -93,6 +94,23 @@ export const userAuthStore = create<AuthState>()(
         }
       },
 
+      loginAdmin: async (email, password) => {
+        set({ loading: true, error: null })
+        try {
+          const response = await postWithoutAuth("/auth/admin/login", {
+            email,
+            password,
+          })
+
+          get().setUser(response.data.user, response.data.token)
+        } catch (error: any) {
+          set({ error: error.message })
+          throw error
+        } finally {
+          set({ loading: false })
+        }
+      },
+
       registerTeacher: async (data) => {
         set({ loading: true, error: null })
 
@@ -130,7 +148,11 @@ export const userAuthStore = create<AuthState>()(
           if (!user) throw new Error("No user found")
 
           const endPoint =
-            user.type === "teacher" ? "/teacher/me" : "/student/me"
+            user.type === "teacher"
+              ? "/teacher/me"
+              : user.type === "student "
+                ? "/student/me"
+                : "/admin/profile"
 
           const response = await getWithAuth(endPoint)
 
@@ -176,6 +198,6 @@ export const userAuthStore = create<AuthState>()(
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 )
