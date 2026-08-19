@@ -36,4 +36,28 @@ module.exports = {
     }
     next()
   },
+
+  requireAdmin: (req, res, next) => {
+    if (!req.auth || !req.auth.type !== "admin") {
+      return res.forbidden("Admin access required")
+    }
+
+    if (!admin || !admin.isActive) {
+      return res.forbidden("Admin Account inactive")
+    }
+
+    next()
+  },
+
+  requirePermission: (permission) => (req, res, next) => {
+    if (
+      !req.user ||
+      !req.user.permissions ||
+      !req.user.permissions[permission]
+    ) {
+      return res.forbidden(`Permission required: ${permission}`)
+    }
+
+    next()
+  },
 }
