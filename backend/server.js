@@ -52,6 +52,7 @@ app.use("/api/teacher", require("./routes/teacher.route"))
 app.use("/api/student", require("./routes/student.route"))
 app.use("/api/appointment", require("./routes/appointment.route"))
 app.use("/api/payment", require("./routes/payment"))
+app.use("/api/admin", require("./routes/admin"))
 
 app.get("/health", (req, res) =>
   res.ok({ time: new Date().toISOString() }, "OK"),

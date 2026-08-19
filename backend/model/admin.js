@@ -8,7 +8,7 @@ const adminSchema = new mongoose.Schema(
 
     password: { type: String },
 
-    name: {
+    role: {
       type: String,
       required: true,
       enum: ["admin", "super_admin"],
