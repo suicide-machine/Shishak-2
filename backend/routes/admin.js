@@ -6,6 +6,9 @@ const bcrypt = require("bcryptjs")
 const { authenticate, requireAdmin } = require("../middleware/auth")
 const admin = require("../model/admin")
 
+const jwt = require("jsonwebtoken")
+
+
 const router = express.Router()
 
 const signToken = (id, type) =>

@@ -97,7 +97,7 @@ export const userAuthStore = create<AuthState>()(
       loginAdmin: async (email, password) => {
         set({ loading: true, error: null })
         try {
-          const response = await postWithoutAuth("/auth/admin/login", {
+          const response = await postWithoutAuth("/admin/auth/login", {
             email,
             password,
           })

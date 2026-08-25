@@ -43,7 +43,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       return
     }
 
-    if (!isAuthenticated || user?.type === "admin") {
+    if (!isAuthenticated || user?.type !== "admin") {
       return router.push("/admin/login")
     }
 

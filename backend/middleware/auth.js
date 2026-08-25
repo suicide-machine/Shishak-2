@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const Teacher = require("../model/teacher")
 const Student = require("../model/student")
 const teacher = require("../model/teacher")
+const admin = require("../model/admin")
 
 module.exports = {
   authenticate: async (req, res, next) => {
@@ -20,6 +21,8 @@ module.exports = {
         req.user = await Teacher.findById(decode.id)
       } else if (decode.type === "student") {
         req.user = await Student.findById(decode.id)
+      } else if (decode.type === "admin") {
+        req.user = await admin.findById(decode.id)
       }
 
       if (!req.user) return res.unauthorized("Invalid user")
@@ -38,11 +41,11 @@ module.exports = {
   },
 
   requireAdmin: (req, res, next) => {
-    if (!req.auth || !req.auth.type !== "admin") {
+    if (!req.auth || req.auth.type !== "admin") {
       return res.forbidden("Admin access required")
     }
 
-    if (!admin || !admin.isActive) {
+    if (!req.user || !req.user.isActive) {
       return res.forbidden("Admin Account inactive")
     }
 
