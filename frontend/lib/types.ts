@@ -134,3 +134,86 @@ export interface TeacherFilters {
   page?: number
   limit?: number
 }
+
+// Using Claude
+
+// ─── Admin core ───────────────────────────────────────────────
+
+export type AdminRole = "admin" | "super_admin"
+
+export interface AdminPermissions {
+  userManagement: boolean
+  teacherManagement: boolean
+  paymentManagement: boolean
+  analytics: boolean
+}
+
+export interface Admin {
+  _id: string
+  name: string
+  email: string
+  role: AdminRole
+  isActive: boolean
+  lastLogin?: string // ISO date string
+  permissions: AdminPermissions
+  createdAt: string
+  updatedAt: string
+}
+
+// ─── Auth ─────────────────────────────────────────────────────
+
+export interface AdminLoginPayload {
+  email: string
+  password: string
+}
+
+export interface AdminLoginUser {
+  id: string
+  name: string
+  email: string
+  role: AdminRole
+  permissions: AdminPermissions
+  type: "admin"
+}
+
+export interface AdminLoginResponse {
+  token: string
+  user: AdminLoginUser
+}
+
+// ─── Dashboard ────────────────────────────────────────────────
+
+export interface MonthlyRevenue {
+  month: string // e.g. "Mar 2026"
+  revenue: number
+}
+
+export interface UserGrowthPoint {
+  month: string
+  students: number
+  teachers: number
+  total: number
+}
+
+// Keys here are appointment status values (e.g. "Completed", "Scheduled")
+// mapped to their counts. Adjust the union if your Appointment status
+// enum differs from what's assumed in the route.
+export type AppointmentStatus =
+  | "Scheduled"
+  | "In Progress"
+  | "Completed"
+  | "Cancelled"
+
+export type AppointmentStats = Partial<Record<AppointmentStatus, number>>
+
+export interface AdminDashboardStats {
+  totalStudents: number
+  totalTeachers: number
+  totalAppointments: number
+  completedAppointments: number
+  pendingAppointments: number
+  totalRevenue: number
+  monthlyRevenue: MonthlyRevenue[]
+  userGrowth: UserGrowthPoint[]
+  appointmentStats: AppointmentStats
+}

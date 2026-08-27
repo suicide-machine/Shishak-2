@@ -7,7 +7,9 @@ const { authenticate, requireAdmin } = require("../middleware/auth")
 const admin = require("../model/admin")
 
 const jwt = require("jsonwebtoken")
-
+const Student = require("../model/student")
+const Teacher = require("../model/teacher")
+const Appointment = require("../model/appointment")
 
 const router = express.Router()
 
@@ -67,6 +69,152 @@ router.get("/profile", authenticate, requireAdmin, async (req, res) => {
     res.ok(admin, "Admin profile fetched successfully")
   } catch (error) {
     res.serverError("Profile fetched failed", [e.message])
+  }
+})
+
+// Using Cluade
+router.get("/dashboard", authenticate, requireAdmin, async (req, res) => {
+  try {
+    const sixMonthsAgo = new Date()
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5) // include current month = 6 months total
+    sixMonthsAgo.setDate(1)
+    sixMonthsAgo.setHours(0, 0, 0, 0)
+
+    const [
+      totalStudents,
+      totalTeachers,
+      totalAppointments,
+      completedAppointments,
+      pendingAppointments,
+      totalRevenueAgg,
+      monthlyRevenueAgg,
+      studentGrowthAgg,
+      teacherGrowthAgg,
+      appointmentStatsAgg,
+    ] = await Promise.all([
+      Student.countDocuments(),
+      Teacher.countDocuments(),
+      Appointment.countDocuments(),
+      Appointment.countDocuments({ status: "Completed" }),
+      Appointment.countDocuments({ status: "Scheduled" }),
+
+      // total revenue (all-time)
+      Appointment.aggregate([
+        { $match: { status: "Completed" } },
+        { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+      ]),
+
+      // monthly revenue, last 6 months
+      Appointment.aggregate([
+        {
+          $match: {
+            status: "Completed",
+            createdAt: { $gte: sixMonthsAgo },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" },
+            },
+            total: { $sum: "$totalAmount" },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } },
+      ]),
+
+      // student growth, last 6 months
+      Student.aggregate([
+        { $match: { createdAt: { $gte: sixMonthsAgo } } },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } },
+      ]),
+
+      // teacher growth, last 6 months
+      Teacher.aggregate([
+        { $match: { createdAt: { $gte: sixMonthsAgo } } },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } },
+      ]),
+
+      // appointment breakdown by status
+      Appointment.aggregate([
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+      ]),
+    ])
+
+    // --- shape monthly revenue into a fixed 6-month array (fills in zero months) ---
+    const monthLabels = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(1)
+      d.setMonth(d.getMonth() - i)
+      monthLabels.push({
+        year: d.getFullYear(),
+        month: d.getMonth() + 1, // 1-indexed to match $month
+        label: d.toLocaleString("en-US", { month: "short", year: "numeric" }),
+      })
+    }
+
+    const monthlyRevenue = monthLabels.map(({ year, month, label }) => {
+      const found = monthlyRevenueAgg.find(
+        (m) => m._id.year === year && m._id.month === month,
+      )
+      return { month: label, revenue: found?.total || 0 }
+    })
+
+    // --- shape user growth (students + teachers combined per month) ---
+    const userGrowth = monthLabels.map(({ year, month, label }) => {
+      const students =
+        studentGrowthAgg.find(
+          (m) => m._id.year === year && m._id.month === month,
+        )?.count || 0
+      const teachers =
+        teacherGrowthAgg.find(
+          (m) => m._id.year === year && m._id.month === month,
+        )?.count || 0
+      return { month: label, students, teachers, total: students + teachers }
+    })
+
+    // --- shape appointment status breakdown into a clean object ---
+    const appointmentStats = appointmentStatsAgg.reduce((acc, s) => {
+      acc[s._id] = s.count
+      return acc
+    }, {})
+
+    const stats = {
+      totalStudents,
+      totalTeachers,
+      totalAppointments,
+      completedAppointments,
+      pendingAppointments,
+      totalRevenue: totalRevenueAgg[0]?.total || 0,
+      monthlyRevenue,
+      userGrowth,
+      appointmentStats,
+    }
+
+    res.ok(stats, "Admin dashboard data retrieved")
+  } catch (error) {
+    console.error("Admin dashboard error", error)
+    res.serverError("Failed to fetch admin dashboard", [error.message])
   }
 })
 
