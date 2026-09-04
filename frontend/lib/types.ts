@@ -2,7 +2,7 @@ export interface User {
   id: string
   name: string
   email: string
-  type: "teacher" | "student " | "admin"
+  type: "teacher" | "student" | "admin"
   phone?: string
   profileImage?: string
   isVerified: boolean
