@@ -150,7 +150,7 @@ export const userAuthStore = create<AuthState>()(
           const endPoint =
             user.type === "teacher"
               ? "/teacher/me"
-              : user.type === "student "
+              : user.type === "student"
                 ? "/student/me"
                 : "/admin/profile"
 
