@@ -400,3 +400,12 @@ export const getStatusColor = (status: string) => {
 //   "Native Speaker",
 //   "Test Prep Expert",
 // ]
+
+const COLORS = [
+  "#2563eb",
+  "#16a34a",
+  "#f59e0b",
+  "#dc2626",
+  "#8b5cf6",
+  "#0891b2",
+]
