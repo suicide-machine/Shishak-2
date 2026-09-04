@@ -29,58 +29,61 @@ const dailyTimeRangeSchema = new mongoose.Schema(
   { _id: false },
 )
 
-const teacherSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+const teacherSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
 
-  email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
 
-  password: { type: String },
+    password: { type: String },
 
-  googleId: { type: String, unique: true, sparse: true },
+    googleId: { type: String, unique: true, sparse: true },
 
-  profileImage: { type: String, default: "" },
+    profileImage: { type: String, default: "" },
 
-  subject: {
-    type: String,
-    enum: [
-      "Mathematics",
-      "Physics",
-      "Chemistry",
-      "Biology",
-      "English",
-      "Computer Science",
-      "History",
-      "Economics",
-      "Programming",
-      "Test Prep",
-    ],
+    subject: {
+      type: String,
+      enum: [
+        "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "English",
+        "Computer Science",
+        "History",
+        "Economics",
+        "Programming",
+        "Test Prep",
+      ],
+    },
+
+    category: { type: [String], enum: subjectCategoriesList, required: false },
+
+    qualification: { type: String, required: false },
+
+    experience: { type: Number },
+
+    about: { type: String },
+
+    hourlyRate: { type: Number },
+
+    locationInfo: {
+      name: String,
+      address: String,
+      city: String,
+    },
+
+    availabilityRange: availabilityRangeSchema,
+
+    dailyTimeRanges: { type: [dailyTimeRangeSchema], default: [] },
+
+    slotDurationMinutes: { type: Number, default: 60 },
+
+    isVerified: { type: Boolean, default: false },
+
+    isActive: { type: Boolean, default: true },
   },
-
-  category: { type: [String], enum: subjectCategoriesList, required: false },
-
-  qualification: { type: String, required: false },
-
-  experience: { type: Number },
-
-  about: { type: String },
-
-  hourlyRate: { type: Number },
-
-  locationInfo: {
-    name: String,
-    address: String,
-    city: String,
-  },
-
-  availabilityRange: availabilityRangeSchema,
-
-  dailyTimeRanges: { type: [dailyTimeRangeSchema], default: [] },
-
-  slotDurationMinutes: { type: Number, default: 60 },
-
-  isVerified: { type: Boolean, default: false },
-
-  isActive: { type: Boolean, default: true },
-})
+  { timestamps: true },
+)
 
 module.exports = mongoose.model("Teacher", teacherSchema)
