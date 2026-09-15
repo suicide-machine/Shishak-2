@@ -1,6 +1,13 @@
 "use client"
 
-import { Bell, Calendar, PersonStanding, Settings, User } from "lucide-react"
+import {
+  Bell,
+  Calendar,
+  PersonStanding,
+  Settings,
+  Shield,
+  User,
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
@@ -201,6 +208,16 @@ const Header: React.FC<HeaderProps> = ({ showDashboardNav = false }) => {
                     className="text-blue-900 font-medium hover:text-blue-700"
                   >
                     Log in
+                  </Button>
+                </Link>
+
+                <Link href="/admin/login">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-600 font-medium hover:text-gray-800 flex items-center"
+                  >
+                    <Shield className="w-4 h-4 mr-1" />
+                    Admin
                   </Button>
                 </Link>
 
