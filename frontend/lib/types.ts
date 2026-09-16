@@ -6,6 +6,7 @@ export interface User {
   phone?: string
   profileImage?: string
   isVerified: boolean
+  isActive: boolean
 
   // Student fields
   dob?: string
