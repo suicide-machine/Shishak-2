@@ -222,8 +222,15 @@ router.get(
         status: "Completed",
       })
 
-      const totalRevenue = totalAppointment.reduce(
-        (sum, apt) => sum + (apt.fees || teacher.hourlyRate || 0),
+      const paidAppointment = await Appointment.find({
+        teacherId,
+        status: "Completed",
+        paymentStatus: "Paid",
+      })
+
+      const totalRevenue = paidAppointment.reduce(
+        (sum, apt) =>
+          sum + (apt.appointmentFees || apt.fees || teacher.hourlyRate || 0),
         0,
       )
 

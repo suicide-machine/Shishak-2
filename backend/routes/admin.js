@@ -414,4 +414,279 @@ router.put(
   },
 )
 
+// Payment get for payout to teachers
+router.get(
+  "/payments",
+  authenticate,
+  requireAdmin,
+  requirePermission("paymentManagement"),
+  async (req, res) => {
+    try {
+      const {
+        page = 1,
+        limit = 10,
+        payoutStatus, // e.g. "Pending" | "Paid" | "Failed" — undefined means fetch all
+      } = req.query
+
+      const pageNum = Math.max(1, parseInt(page))
+      const limitNum = Math.min(100, Math.max(1, parseInt(limit)))
+      const skip = (pageNum - 1) * limitNum
+
+      // ── Match query ───────────────────────────────────────────────────────
+      // Always scope to Completed appointments only — only completed
+      // appointments are eligible for teacher payout
+      const matchQuery = { status: "Completed" }
+      if (payoutStatus) matchQuery.payoutStatus = payoutStatus
+
+      // Get completed appointment with payment details
+      const result = await Appointment.aggregate([
+        {
+          $match: matchQuery,
+        },
+        {
+          $lookup: {
+            from: "teachers",
+            localField: "teacherId",
+            foreignField: "_id",
+            as: "teacher",
+          },
+        },
+        {
+          $unwind: "$teacher",
+        },
+        {
+          $lookup: {
+            from: "students",
+            localField: "studentId",
+            foreignField: "_id",
+            as: "student",
+          },
+        },
+        {
+          $unwind: "$student",
+        },
+        {
+          $project: {
+            _id: 1,
+            appointmentType: 1,
+            subject: 1,
+            date: 1,
+            slotStartIso: 1,
+            slotEndIso: 1,
+            status: 1,
+            appointmentFees: 1,
+            platformFees: 1,
+            totalAmount: 1,
+            paymentStatus: 1,
+            paymentMethod: 1,
+            paymentDate: 1,
+            payoutStatus: 1,
+            razorpayPaymentId: 1,
+            razorpayOrderId: 1,
+            createdAt: 1,
+
+            teacher: {
+              _id: "$teacher._id",
+              name: "$teacher.name",
+              email: "$teacher.email",
+              phone: "$teacher.phone",
+              hourlyRate: "$teacher.hourlyRate",
+              subject: "$teacher.subject",
+              profileImage: "$teacher.profileImage",
+              locationInfo: "$teacher.locationInfo",
+            },
+
+            student: {
+              _id: "$student._id",
+              name: "$student.name",
+              email: "$student.email",
+              phone: "$student.phone",
+              profileImage: "$student.profileImage",
+            },
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $facet: {
+            data: [{ $skip: skip }, { $limit: limitNum }],
+            totalCount: [{ $count: "count" }],
+          },
+        },
+      ])
+
+      const payments = result[0]?.data || []
+      const total = result[0]?.totalCount[0]?.count || 0
+
+      res.ok(
+        {
+          payments,
+          pagination: {
+            total,
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(total / limitNum),
+          },
+        },
+        "Payments retrieved successfully",
+      )
+    } catch (error) {
+      console.error("Fetch payments error", error)
+      res.serverError("Failed to fetch payments", [error.message])
+    }
+  },
+)
+
+// Process payout to teacher
+// Needs: const { body, param } = require("express-validator")  ← add `param` to your existing import
+
+// Process payout to teacher
+router.put(
+  "/payments/:appointmentId/payout",
+  authenticate,
+  requireAdmin,
+  requirePermission("paymentManagement"),
+  [
+    // CHANGED: validate the ID shape and restrict payoutStatus to real enum values
+    param("appointmentId")
+      .isMongoId()
+      .withMessage("Valid appointment ID is required"),
+    body("payoutStatus")
+      .isIn(["Pending", "Paid", "Failed"])
+      .withMessage("payoutStatus must be one of: Pending, Paid, Failed"),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const { appointmentId } = req.params
+      const { payoutStatus } = req.body
+
+      const appointment = await Appointment.findById(appointmentId)
+
+      if (!appointment) {
+        return res.notFound("Appointment not found")
+      }
+
+      if (appointment.status !== "Completed") {
+        return res.badRequest(
+          "Can only process payouts for completed appointments",
+        )
+      }
+
+      // CHANGED: don't allow paying a teacher before the student's payment
+      // has actually been collected
+      if (appointment.paymentStatus !== "Paid") {
+        return res.badRequest(
+          "Cannot process payout before payment is collected",
+        )
+      }
+
+      // CHANGED: guard against re-processing an already-completed payout
+      if (appointment.payoutStatus === "Paid" && payoutStatus === "Paid") {
+        return res.badRequest("Payout has already been processed")
+      }
+
+      const payoutAmount = appointment.appointmentFees
+      const platformFees = appointment.platformFees
+
+      // CHANGED: wrapped in $set — without this, Mongo treats the object as a
+      // full document replacement and deletes every other field on save
+      const updateData = {
+        $set: {
+          payoutStatus,
+          ...(payoutStatus === "Paid" && { payoutDate: new Date() }),
+        },
+      }
+
+      const updateAppointment = await Appointment.findByIdAndUpdate(
+        appointmentId,
+        updateData,
+        { new: true },
+      )
+        .populate("teacherId", "name email")
+        .populate("studentId", "name email")
+
+      res.ok(
+        {
+          ...updateAppointment.toObject(),
+          payoutAmount,
+          platformFees,
+        },
+        payoutStatus === "Paid"
+          ? `Payout marked as paid. Teacher receives ${payoutAmount}, platform fee is ${platformFees}`
+          : `Payout ${payoutStatus.toLowerCase()} successfully`,
+      )
+    } catch (error) {
+      // CHANGED: consistent CastError handling + server-side logging,
+      // matching the rest of this file
+      if (error.name === "CastError") {
+        return res.badRequest("Invalid appointment ID format")
+      }
+      console.error("Process payout error", error)
+      res.serverError("Failed to process payout", [error.message])
+    }
+  },
+)
+
+// hardcoded
+// router.put(
+//   "/payments/:appointmentId/payout",
+//   authenticate,
+//   requireAdmin,
+//   requirePermission("paymentManagement"),
+//   async (req, res) => {
+//     try {
+//       const { appointmentId } = req.params
+//       const { payoutStatus } = req.body
+
+//       const appointment = await Appointment.findById(appointmentId)
+
+//       if (!appointment) {
+//         return res.notFound("Appointment not found")
+//       }
+
+//       if (appointment.status !== "Completed") {
+//         return res.badRequest(
+//           "Can only process payouts for completed appointments",
+//         )
+//       }
+
+//       const payoutAmount = appointment.appointmentFees
+//       const platformFees = appointment.platformFees
+
+//       const updateData = {
+//         payoutStatus,
+//       }
+
+//       if (payoutStatus === "Paid") {
+//         updateData.payoutDate = new Date()
+//       }
+
+//       const updateAppointment = await Appointment.findByIdAndUpdate(
+//         appointmentId,
+//         updateData,
+//         { new: true },
+//       )
+//         .populate("teacherId", "name email")
+//         .populate("studentId", "name email")
+
+//       res.ok(
+//         {
+//           ...updateAppointment.toObject(),
+//           payoutAmount,
+//           platformFees,
+//           message:
+//             payoutStatus === "Paid"
+//               ? `Payout marked as paid. Teacher receive ${payoutAmount}, platform fees is ${platformFees}`
+//               : `Payout ${payoutStatus.toLowerCase()} successfully`,
+//         },
+//         `Payout ${payoutStatus.toLowerCase()} successfully`,
+//       )
+//     } catch (error) {
+//       res.serverError("Failed to payout payments", [error.message])
+//     }
+//   },
+// )
+
 module.exports = router
