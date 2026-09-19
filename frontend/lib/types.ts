@@ -218,3 +218,65 @@ export interface AdminDashboardStats {
   userGrowth: UserGrowthPoint[]
   appointmentStats: AppointmentStats
 }
+
+// ─── Payments ─────────────────────────────────────────────────
+
+export type PayoutStatus = "Pending" | "Paid" | "Failed"
+export type PaymentStatus = "Pending" | "Paid" | "Failed"
+
+export interface PaymentTeacher {
+  _id: string
+  name: string
+  email: string
+  phone?: string
+  hourlyRate?: number
+  subject?: string
+  profileImage?: string
+  locationInfo?: {
+    name?: string
+    address?: string
+    city?: string
+  }
+}
+
+export interface PaymentStudent {
+  _id: string
+  name: string
+  email: string
+  phone?: string
+  profileImage?: string
+}
+
+export interface Payment {
+  _id: string
+  appointmentType: string
+  subject: string
+  date: string
+  slotStartIso: string
+  slotEndIso: string
+  status: string
+  appointmentFees: number
+  platformFees: number
+  totalAmount: number
+  paymentStatus: PaymentStatus
+  paymentMethod?: string
+  paymentDate?: string
+  payoutStatus: PayoutStatus
+  razorpayPaymentId?: string
+  razorpayOrderId?: string
+  createdAt: string
+  teacher: PaymentTeacher
+  student: PaymentStudent
+}
+
+export interface PaymentPagination {
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
+export interface FetchPaymentsResponse {
+  payments: Payment[]
+  pagination: PaymentPagination
+}

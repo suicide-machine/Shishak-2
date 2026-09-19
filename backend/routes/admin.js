@@ -1,5 +1,5 @@
 const express = require("express")
-const { body } = require("express-validator")
+const { body, param } = require("express-validator")
 const validate = require("../middleware/validate")
 const Admin = require("../model/admin")
 const bcrypt = require("bcryptjs")
